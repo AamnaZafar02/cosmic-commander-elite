@@ -149,19 +149,46 @@ class GameAuthManager {
             }
         } else {
             // User is not logged in - but allow game to be played
-            if (loginBtn) loginBtn.style.display = 'block';
+            if (loginBtn) loginBtn.style.display = 'none'; // Hide login button from game page
             if (logoutBtn) logoutBtn.style.display = 'none';
             if (userInfo) {
                 userInfo.style.display = 'flex';
-                // Show guest user info
+                // Show generated player name instead of "Guest Player"
                 if (userName) {
-                    userName.textContent = 'Guest Player';
+                    userName.textContent = this.generatePlayerName();
                 }
             }
             
             // Hide the login modal by default - make login optional
             this.hideModal('loginModal');
         }
+    }
+
+    // Generate a fun player name for guest users
+    generatePlayerName() {
+        const adjectives = [
+            'Cosmic', 'Stellar', 'Galactic', 'Nova', 'Quantum', 'Plasma', 
+            'Astro', 'Solar', 'Lunar', 'Meteor', 'Nebula', 'Orbital',
+            'Fusion', 'Photon', 'Laser', 'Cyber', 'Proto', 'Alpha'
+        ];
+        
+        const nouns = [
+            'Commander', 'Pilot', 'Ace', 'Captain', 'Admiral', 'Warrior',
+            'Hunter', 'Ranger', 'Scout', 'Guardian', 'Knight', 'Hero',
+            'Champion', 'Elite', 'Master', 'Legend', 'Phoenix', 'Storm'
+        ];
+        
+        // Get stored name or generate new one
+        let storedName = localStorage.getItem('guestPlayerName');
+        if (!storedName) {
+            const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+            const noun = nouns[Math.floor(Math.random() * nouns.length)];
+            const number = Math.floor(Math.random() * 999) + 1;
+            storedName = `${adjective} ${noun} ${number}`;
+            localStorage.setItem('guestPlayerName', storedName);
+        }
+        
+        return storedName;
     }
 
     showModal(modalId) {
@@ -311,6 +338,7 @@ class GameAuthManager {
     logout() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        localStorage.removeItem('guestPlayerName'); // Clear generated guest name
         this.token = null;
         this.user = null;
         
