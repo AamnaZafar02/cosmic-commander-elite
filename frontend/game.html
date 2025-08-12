@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cosmic Commander Elite - Game</title>
+    <link rel="stylesheet" href="styles/game.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="stars2"></div>
+    <div class="stars3"></div>
+
+    <!-- Game Header -->
+    <header class="game-header">
+        <div class="header-left">
+            <a href="index.html" class="logo-link">
+                <div class="logo">
+                    <i class="fas fa-rocket"></i>
+                    <span>COSMIC COMMANDER ELITE</span>
+                </div>
+            </a>
+            <div class="star-rating">
+                <i class="fas fa-star"></i>
+            </div>
+        </div>
+        
+        <div class="header-center">
+            <div class="daily-challenge">
+                <i class="fas fa-trophy"></i>
+                <div>
+                    <div class="challenge-title">Daily Challenge</div>
+                    <div class="challenge-desc" id="challengeDesc">Destroy 50 aliens without taking damage</div>
+                </div>
+                <div class="challenge-progress" id="challengeProgress">0/50</div>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="user-info" id="userInfo">
+                <div class="user-avatar">
+                    <img id="userAvatar" src="" alt="Commander" onerror="this.style.display='none'; document.getElementById('avatarIcon').style.display='block';">
+                    <i class="fas fa-user-astronaut" id="avatarIcon"></i>
+                </div>
+                <div class="user-details">
+                    <div class="welcome-text">Welcome, <span id="userName">Commander</span>!</div>
+                    <div class="user-rank">Recruit</div>
+                </div>
+            </div>
+            <button class="btn btn-outline" id="logoutBtn">LOGOUT</button>
+            <button class="btn btn-primary" id="loginBtn">LOGIN</button>
+        </div>
+    </header>
+
+    <!-- Game Container -->
+    <div class="game-container">
+        <div class="game-sidebar left">
+            <div class="sidebar-section">
+                <div class="section-icon">
+                    <i class="fas fa-crosshairs"></i>
+                </div>
+                <h3>MISSION STATUS</h3>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">SCORE</div>
+                    <div class="stat-value" id="scoreValue">0</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">LIVES</div>
+                    <div class="stat-value" id="livesValue">3</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">LEVEL</div>
+                    <div class="stat-value" id="levelValue">1</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-meteor"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">TIME</div>
+                    <div class="stat-value" id="timeValue">0:00</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-target"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">ACCURACY</div>
+                    <div class="stat-value" id="accuracyValue">0%</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">COMBO</div>
+                    <div class="stat-value" id="comboValue">x1</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <div class="mission-info">
+                <h2 id="missionTitle">SECTOR 1: ASTEROID FIELD</h2>
+                <p id="missionDesc">Navigate through dangerous asteroid fields while fighting alien invaders</p>
+            </div>
+            
+            <canvas id="gameCanvas" width="600" height="450"></canvas>
+            
+            <div class="game-controls">
+                <button class="control-btn" id="startBtn">
+                    <i class="fas fa-play"></i>
+                    START MISSION
+                </button>
+                <button class="control-btn" id="pauseBtn" style="display: none;">
+                    <i class="fas fa-pause"></i>
+                    PAUSE
+                </button>
+            </div>
+        </div>
+
+        <div class="game-sidebar right">
+            <div class="sidebar-section">
+                <div class="section-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h3>TOP COMMANDERS</h3>
+            </div>
+            
+            <div class="leaderboard" id="leaderboard">
+                <div class="leader-card">
+                    <div class="leader-rank">🥇</div>
+                    <div class="leader-info">
+                        <div class="leader-name">No Record</div>
+                        <div class="leader-score">0</div>
+                    </div>
+                </div>
+                <div class="leader-card">
+                    <div class="leader-rank">🥈</div>
+                    <div class="leader-info">
+                        <div class="leader-name">No Record</div>
+                        <div class="leader-score">0</div>
+                    </div>
+                </div>
+                <div class="leader-card">
+                    <div class="leader-rank">🥉</div>
+                    <div class="leader-info">
+                        <div class="leader-name">No Record</div>
+                        <div class="leader-score">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rank-info">
+                <div class="your-rank">Your Rank: <span id="userRank">#--</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div class="modal" id="gameOverModal">
+        <div class="modal-content game-over">
+            <div class="game-over-header">
+                <i class="fas fa-skull"></i>
+                <i class="fas fa-skull"></i>
+                <h2>GAME OVER!</h2>
+                <i class="fas fa-skull"></i>
+                <i class="fas fa-skull"></i>
+            </div>
+            
+            <div class="final-stats">
+                <div class="stat-row">
+                    <span>Final Score:</span>
+                    <span id="finalScore">0</span>
+                </div>
+                <div class="stat-row">
+                    <span>Aliens Defeated:</span>
+                    <span id="finalAliens">0</span>
+                </div>
+                <div class="stat-row">
+                    <span>Level Reached:</span>
+                    <span id="finalLevel">1</span>
+                </div>
+                <div class="stat-row">
+                    <span>Survival Time:</span>
+                    <span id="finalTime">0:00</span>
+                </div>
+                <div class="stat-row">
+                    <span>Accuracy:</span>
+                    <span id="finalAccuracy">0%</span>
+                </div>
+            </div>
+            
+            <div class="game-over-actions">
+                <button class="btn btn-primary" id="playAgainBtn">
+                    <i class="fas fa-redo"></i>
+                    PLAY AGAIN
+                </button>
+                <button class="btn btn-outline" id="backToMenuBtn">
+                    <i class="fas fa-home"></i>
+                    MAIN MENU
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-header">
+                <i class="fas fa-rocket"></i>
+                <h2>Commander Access Required</h2>
+            </div>
+            
+            <div class="auth-tabs">
+                <button class="tab-btn active" data-tab="login">Login</button>
+                <button class="tab-btn" data-tab="register">Register</button>
+            </div>
+
+            <div id="loginForm" class="auth-form active">
+                <form id="loginFormElement">
+                    <div class="form-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="loginEmail" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="loginPassword" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </button>
+                </form>
+                
+                <div class="divider" style="display: none;">
+                    <span>or</span>
+                </div>
+                
+                <button class="btn btn-google" id="googleLoginBtn" style="display: none;">
+                    <i class="fab fa-google"></i>
+                    Continue with Google
+                </button>
+            </div>
+
+            <div id="registerForm" class="auth-form">
+                <form id="registerFormElement">
+                    <div class="form-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="registerUsername" placeholder="Commander Name" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="registerEmail" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="registerPassword" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i>
+                        Join Elite Forces
+                    </button>
+                </form>
+                
+                <div class="divider" style="display: none;">
+                    <span>or</span>
+                </div>
+                
+                <button class="btn btn-google" id="googleRegisterBtn" style="display: none;">
+                    <i class="fab fa-google"></i>
+                    Continue with Google
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/game-auth.js"></script>
+    <script src="scripts/game-engine.js"></script>
+    <script src="scripts/game.js"></script>
+</body>
+</html>
