@@ -146,34 +146,10 @@ class GameEngine {
     }
 
     initializeMobileControls() {
-        // Mobile touch buttons
-        const upBtn = document.getElementById('upBtn');
-        const downBtn = document.getElementById('downBtn');
+        // Mobile touch buttons (LEFT, RIGHT, FIRE only)
         const leftBtn = document.getElementById('leftBtn');
         const rightBtn = document.getElementById('rightBtn');
         const fireBtn = document.getElementById('fireBtn');
-
-        if (upBtn) {
-            upBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                this.touchControls.up = true;
-            });
-            upBtn.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                this.touchControls.up = false;
-            });
-        }
-
-        if (downBtn) {
-            downBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                this.touchControls.down = true;
-            });
-            downBtn.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                this.touchControls.down = false;
-            });
-        }
 
         if (leftBtn) {
             leftBtn.addEventListener('touchstart', (e) => {
@@ -286,51 +262,36 @@ class GameEngine {
             }
         }
 
-        // Smooth keyboard and mobile movement
+        // Smooth horizontal movement only (no vertical movement)
         let moveX = 0;
-        let moveY = 0;
 
-        // Keyboard controls
+        // Keyboard controls (left/right only)
         if (this.keys['KeyA'] || this.keys['ArrowLeft']) {
             moveX = -1;
         }
         if (this.keys['KeyD'] || this.keys['ArrowRight']) {
             moveX = 1;
         }
-        if (this.keys['KeyW'] || this.keys['ArrowUp']) {
-            moveY = -1;
-        }
-        if (this.keys['KeyS'] || this.keys['ArrowDown']) {
-            moveY = 1;
-        }
 
-        // Mobile touch controls
+        // Mobile touch controls (left/right only)
         if (this.touchControls.left) {
             moveX = -1;
         }
         if (this.touchControls.right) {
             moveX = 1;
         }
-        if (this.touchControls.up) {
-            moveY = -1;
-        }
-        if (this.touchControls.down) {
-            moveY = 1;
-        }
 
-        // Continuous fire for mobile
-        if (this.touchControls.fire && this.isRunning) {
+        // Continuous fire for mobile or spacebar
+        if ((this.touchControls.fire || this.keys['Space']) && this.isRunning) {
             this.shoot();
         }
 
-        // Apply movement with bounds checking and deltaTime
+        // Apply horizontal movement only with bounds checking and deltaTime
         const moveSpeed = this.player.speed * (deltaTime * 0.08); // Balanced movement speed
         this.player.x += moveX * moveSpeed;
-        this.player.y += moveY * moveSpeed;
 
-        // Keep player within bounds
+        // Keep player within horizontal bounds only
         this.player.x = Math.max(0, Math.min(this.width - this.player.width, this.player.x));
-        this.player.y = Math.max(0, Math.min(this.height - this.player.height, this.player.y));
 
         // Update thrust animation
         this.player.thrustOffset = Math.sin(Date.now() * 0.02) * 3;
@@ -515,46 +476,61 @@ class GameEngine {
             // Divide canvas into 5 sections and randomly place in one section
             const section = Math.floor(Math.random() * 5);
             const sectionWidth = this.width / 5;
-            const xPosition = (section * sectionWidth) + (Math.random() * (sectionWidth - 60));
+            const xPosition = (section * sectionWidth) + (Math.random() * (sectionWidth - 40));
             
-            if (enemyType < 0.7) {
-                // Fast Scout (70% chance) - Fast but weak
+            if (enemyType < 0.5) {
+                // Small Alien (50% chance) - Small and fast
                 enemy = {
                     x: xPosition,
-                    y: -50,
-                    width: 45,
-                    height: 35,
-                    speed: 2 + Math.random() * 1, // Reduced speed: 2-3
+                    y: -30,
+                    width: 25, // Much smaller size
+                    height: 20,
+                    speed: 2 + Math.random() * 1, // 2-3 speed
                     health: 1,
-                    type: 'alien_basic', // Changed to match rendering types
-                    shootTimer: 2000 + Math.random() * 2000, // Shoot less frequently
+                    type: 'alien_small',
+                    shootTimer: 2000 + Math.random() * 2000,
                     color: '#ff4444'
                 };
-            } else if (enemyType < 0.9) {
-                // Medium Fighter (20% chance) - Balanced
+            } else if (enemyType < 0.75) {
+                // Spawn Enemy (25% chance) - Medium size
                 enemy = {
                     x: xPosition,
-                    y: -60,
-                    width: 55,
-                    height: 45,
-                    speed: 1.5 + Math.random() * 1, // Reduced speed: 1.5-2.5
-                    health: 2,
-                    type: 'alien_advanced', // Changed to match rendering types
-                    shootTimer: 2500 + Math.random() * 2000, // Shoot less frequently
+                    y: -35,
+                    width: 30, // Smaller size
+                    height: 25,
+                    speed: 1.5 + Math.random() * 1, // 1.5-2.5 speed
+                    health: 1,
+                    type: 'spawn_enemy',
+                    shootTimer: 2500 + Math.random() * 2000,
                     color: '#ff6666'
                 };
-            } else {
-                // Heavy Destroyer (10% chance) - Slow but strong
+            } else if (enemyType < 0.9) {
+                // Obstacle Enemy (15% chance) - Like moving obstacles
                 enemy = {
                     x: xPosition,
-                    y: -80,
-                    width: 75,
-                    height: 60,
-                    speed: 0.8 + Math.random() * 0.7, // Reduced speed: 0.8-1.5
-                    health: 3,
-                    type: 'alien_boss', // Changed to match rendering types
-                    shootTimer: 3000 + Math.random() * 2000, // Shoot less frequently
-                    color: '#ff8888'
+                    y: -40,
+                    width: 35, // Small-medium size
+                    height: 30,
+                    speed: 1 + Math.random() * 1, // 1-2 speed
+                    health: 2,
+                    type: 'obstacle_enemy',
+                    shootTimer: 3000 + Math.random() * 2000,
+                    color: '#ff8888',
+                    rotation: 0,
+                    rotationSpeed: 0.02
+                };
+            } else {
+                // Advanced Alien (10% chance) - Slightly bigger but still small
+                enemy = {
+                    x: xPosition,
+                    y: -45,
+                    width: 40, // Still small
+                    height: 35,
+                    speed: 0.8 + Math.random() * 0.7, // 0.8-1.5 speed
+                    health: 2,
+                    type: 'alien_advanced',
+                    shootTimer: 3500 + Math.random() * 2000,
+                    color: '#ffaa44'
                 };
             }
             
@@ -618,35 +594,37 @@ class GameEngine {
     spawnPowerups(deltaTime) {
         this.powerupSpawnTimer += deltaTime;
         
-        if (this.powerupSpawnTimer > 12000) { // Spawn every 12 seconds (rare)
+        if (this.powerupSpawnTimer > 8000) { // Spawn every 8 seconds (more frequent)
             this.powerupSpawnTimer = 0;
             
             const powerupType = Math.random();
             let powerup;
             
-            if (powerupType < 0.6) {
-                // Double shot star (60% of power-ups)
+            if (powerupType < 0.7) {
+                // Star power-up (70% of power-ups) - Double fire
                 powerup = {
                     x: Math.random() * (this.width - 30),
                     y: -30,
                     size: 25,
-                    speed: 1.5, // Slower speed to match enemies
+                    speed: 1.5,
                     rotation: 0,
                     type: 'star',
                     collected: false,
-                    glow: 0
+                    glow: 0,
+                    sparkleTimer: 0
                 };
             } else {
-                // Health heart (40% of power-ups, very rare overall)
+                // Heart power-up (30% of power-ups) - Extra life
                 powerup = {
                     x: Math.random() * (this.width - 25),
                     y: -25,
-                    size: 20,
-                    speed: 1.5, // Slower speed to match enemies
+                    size: 22,
+                    speed: 1.5,
                     rotation: 0,
                     type: 'heart',
                     collected: false,
-                    pulse: 0
+                    pulse: 0,
+                    beatTimer: 0
                 };
             }
             
@@ -1141,124 +1119,117 @@ class GameEngine {
             const centerY = enemy.y + enemy.height / 2;
             this.ctx.translate(centerX, centerY);
             
+            // Add rotation for obstacle enemies
+            if (enemy.type === 'obstacle_enemy' && enemy.rotation !== undefined) {
+                this.ctx.rotate(enemy.rotation);
+                enemy.rotation += enemy.rotationSpeed || 0.02;
+            }
+            
             // Reset shadows
             this.ctx.shadowBlur = 0;
             this.ctx.shadowColor = 'transparent';
             
-            if (enemy.type === 'alien_basic') {
-                // Draw green/teal alien body (like screenshot)
-                this.ctx.fillStyle = '#40E0D0'; // Turquoise/Cyan body
+            if (enemy.type === 'alien_small') {
+                // Small green alien - compact design
+                this.ctx.fillStyle = '#32CD32'; // Lime green body
                 this.ctx.beginPath();
-                this.ctx.ellipse(0, 0, enemy.width * 0.4, enemy.height * 0.3, 0, 0, Math.PI * 2);
+                this.ctx.ellipse(0, 0, enemy.width * 0.4, enemy.height * 0.35, 0, 0, Math.PI * 2);
                 this.ctx.fill();
                 
-                // Dark green spots
-                this.ctx.fillStyle = '#2E8B57';
+                // Dark spots
+                this.ctx.fillStyle = '#228B22';
                 this.ctx.beginPath();
-                this.ctx.ellipse(-8, -5, 4, 3, 0, 0, Math.PI * 2);
+                this.ctx.ellipse(-4, -2, 2, 1.5, 0, 0, Math.PI * 2);
                 this.ctx.fill();
                 this.ctx.beginPath();
-                this.ctx.ellipse(6, -3, 3, 2, 0, 0, Math.PI * 2);
+                this.ctx.ellipse(3, -1, 1.5, 1, 0, 0, Math.PI * 2);
                 this.ctx.fill();
                 
-                // Eyes
+                // Small eyes
                 this.ctx.fillStyle = '#000000';
                 this.ctx.beginPath();
-                this.ctx.ellipse(-6, -2, 2, 3, 0, 0, Math.PI * 2);
+                this.ctx.ellipse(-3, -1, 1, 1.5, 0, 0, Math.PI * 2);
                 this.ctx.fill();
                 this.ctx.beginPath();
-                this.ctx.ellipse(6, -2, 2, 3, 0, 0, Math.PI * 2);
+                this.ctx.ellipse(3, -1, 1, 1.5, 0, 0, Math.PI * 2);
                 this.ctx.fill();
                 
-                // White outline for visibility
-                this.ctx.strokeStyle = '#FFFFFF';
+            } else if (enemy.type === 'spawn_enemy') {
+                // Spawn enemy - yellowish brown
+                this.ctx.fillStyle = '#DAA520'; // Golden rod body
+                this.ctx.beginPath();
+                this.ctx.ellipse(0, 0, enemy.width * 0.4, enemy.height * 0.4, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Spawn pattern
+                this.ctx.fillStyle = '#B8860B';
+                this.ctx.beginPath();
+                this.ctx.ellipse(0, -3, 6, 3, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Segmented body
+                this.ctx.strokeStyle = '#8B4513';
                 this.ctx.lineWidth = 1;
                 this.ctx.beginPath();
-                this.ctx.ellipse(0, 0, enemy.width * 0.4, enemy.height * 0.3, 0, 0, Math.PI * 2);
+                this.ctx.arc(0, -6, 3, 0, Math.PI * 2);
                 this.ctx.stroke();
+                this.ctx.beginPath();
+                this.ctx.arc(0, 0, 4, 0, Math.PI * 2);
+                this.ctx.stroke();
+                this.ctx.beginPath();
+                this.ctx.arc(0, 6, 3, 0, Math.PI * 2);
+                this.ctx.stroke();
+                
+            } else if (enemy.type === 'obstacle_enemy') {
+                // Obstacle enemy - asteroid-like
+                this.ctx.fillStyle = '#696969'; // Dim gray body
+                this.ctx.beginPath();
+                
+                // Draw irregular asteroid shape
+                const points = 8;
+                const radius = enemy.width * 0.4;
+                this.ctx.moveTo(radius, 0);
+                for (let i = 1; i <= points; i++) {
+                    const angle = (i * Math.PI * 2) / points;
+                    const r = radius * (0.8 + Math.random() * 0.4);
+                    this.ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+                }
+                this.ctx.closePath();
+                this.ctx.fill();
+                
+                // Rock texture
+                this.ctx.fillStyle = '#2F4F4F';
+                this.ctx.beginPath();
+                this.ctx.ellipse(-4, -3, 2, 1, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.ellipse(3, 2, 1.5, 1.5, 0, 0, Math.PI * 2);
+                this.ctx.fill();
                 
             } else if (enemy.type === 'alien_advanced') {
-                // Draw purple/pink alien (like screenshot)
-                this.ctx.fillStyle = '#9370DB'; // Medium slate blue/purple body
+                // Advanced alien - purple/blue
+                this.ctx.fillStyle = '#9370DB'; // Medium slate blue body
                 this.ctx.beginPath();
-                this.ctx.ellipse(0, 0, enemy.width * 0.35, enemy.height * 0.35, 0, 0, Math.PI * 2);
+                this.ctx.ellipse(0, 0, enemy.width * 0.4, enemy.height * 0.4, 0, 0, Math.PI * 2);
                 this.ctx.fill();
                 
-                // Pink/magenta accents
-                this.ctx.fillStyle = '#FF69B4';
+                // Advanced features
+                this.ctx.fillStyle = '#4169E1';
                 this.ctx.beginPath();
-                this.ctx.ellipse(0, -8, 8, 4, 0, 0, Math.PI * 2);
+                this.ctx.ellipse(0, -4, 8, 3, 0, 0, Math.PI * 2);
                 this.ctx.fill();
                 
-                // Tentacles/appendages
-                this.ctx.fillStyle = '#8A2BE2';
-                this.ctx.fillRect(-12, 8, 4, 8);
-                this.ctx.fillRect(-4, 10, 4, 6);
-                this.ctx.fillRect(4, 10, 4, 6);
-                this.ctx.fillRect(8, 8, 4, 8);
-                
-                // Eyes
-                this.ctx.fillStyle = '#FF0000'; // Red eyes for advanced
+                // Multiple eyes
+                this.ctx.fillStyle = '#FF0000';
                 this.ctx.beginPath();
-                this.ctx.ellipse(-5, -3, 2, 3, 0, 0, Math.PI * 2);
+                this.ctx.ellipse(-5, -2, 1.5, 2, 0, 0, Math.PI * 2);
                 this.ctx.fill();
                 this.ctx.beginPath();
-                this.ctx.ellipse(5, -3, 2, 3, 0, 0, Math.PI * 2);
-                this.ctx.fill();
-                
-                // White outline for visibility
-                this.ctx.strokeStyle = '#FFFFFF';
-                this.ctx.lineWidth = 1;
-                this.ctx.beginPath();
-                this.ctx.ellipse(0, 0, enemy.width * 0.35, enemy.height * 0.35, 0, 0, Math.PI * 2);
-                this.ctx.stroke();
-                
-            } else if (enemy.type === 'alien_boss') {
-                // Draw larger orange/yellow boss alien
-                this.ctx.fillStyle = '#FF8C00'; // Dark orange body
-                this.ctx.beginPath();
-                this.ctx.ellipse(0, 0, enemy.width * 0.4, enemy.height * 0.3, 0, 0, Math.PI * 2);
-                this.ctx.fill();
-                
-                // Yellow center
-                this.ctx.fillStyle = '#FFD700';
-                this.ctx.beginPath();
-                this.ctx.ellipse(0, 0, enemy.width * 0.25, enemy.height * 0.2, 0, 0, Math.PI * 2);
-                this.ctx.fill();
-                
-                // Multiple eyes for boss
-                this.ctx.fillStyle = '#8B0000'; // Dark red eyes
-                this.ctx.beginPath();
-                this.ctx.ellipse(-8, -5, 2, 3, 0, 0, Math.PI * 2);
+                this.ctx.ellipse(0, -3, 1.5, 2, 0, 0, Math.PI * 2);
                 this.ctx.fill();
                 this.ctx.beginPath();
-                this.ctx.ellipse(0, -5, 2, 3, 0, 0, Math.PI * 2);
+                this.ctx.ellipse(5, -2, 1.5, 2, 0, 0, Math.PI * 2);
                 this.ctx.fill();
-                this.ctx.beginPath();
-                this.ctx.ellipse(8, -5, 2, 3, 0, 0, Math.PI * 2);
-                this.ctx.fill();
-                
-                // Boss spikes/armor
-                this.ctx.fillStyle = '#B22222';
-                this.ctx.beginPath();
-                this.ctx.moveTo(-15, 0);
-                this.ctx.lineTo(-20, -5);
-                this.ctx.lineTo(-20, 5);
-                this.ctx.closePath();
-                this.ctx.fill();
-                this.ctx.beginPath();
-                this.ctx.moveTo(15, 0);
-                this.ctx.lineTo(20, -5);
-                this.ctx.lineTo(20, 5);
-                this.ctx.closePath();
-                this.ctx.fill();
-                
-                // White outline for visibility
-                this.ctx.strokeStyle = '#FFFFFF';
-                this.ctx.lineWidth = 2;
-                this.ctx.beginPath();
-                this.ctx.ellipse(0, 0, enemy.width * 0.4, enemy.height * 0.3, 0, 0, Math.PI * 2);
-                this.ctx.stroke();
             }
             
             this.ctx.restore();
@@ -1346,32 +1317,79 @@ class GameEngine {
             this.ctx.rotate(powerup.rotation);
             
             if (powerup.type === 'star') {
-                // Star power-up - clear emoji only
-                this.ctx.shadowBlur = 0;
-                this.ctx.font = 'bold 30px Arial';
-                this.ctx.textAlign = 'center';
-                this.ctx.textBaseline = 'middle';
-                this.ctx.fillText('⭐', 0, 0);
+                // Enhanced star power-up with glow
+                this.ctx.shadowBlur = 15;
+                this.ctx.shadowColor = '#FFD700';
+                
+                // Draw multi-pointed star
+                this.ctx.fillStyle = '#FFD700';
+                this.ctx.strokeStyle = '#FFA500';
+                this.ctx.lineWidth = 2;
+                
+                this.ctx.beginPath();
+                const spikes = 5;
+                const outerRadius = powerup.size * 0.4;
+                const innerRadius = outerRadius * 0.4;
+                
+                for (let i = 0; i < spikes * 2; i++) {
+                    const radius = i % 2 === 0 ? outerRadius : innerRadius;
+                    const angle = (i * Math.PI) / spikes;
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
+                    
+                    if (i === 0) {
+                        this.ctx.moveTo(x, y);
+                    } else {
+                        this.ctx.lineTo(x, y);
+                    }
+                }
+                this.ctx.closePath();
+                this.ctx.fill();
+                this.ctx.stroke();
+                
+                // Add sparkle effect
+                powerup.sparkleTimer = (powerup.sparkleTimer || 0) + 0.1;
+                if (Math.sin(powerup.sparkleTimer) > 0.5) {
+                    this.ctx.fillStyle = '#FFFFFF';
+                    this.ctx.fillRect(-1, -1, 2, 2);
+                }
                 
             } else if (powerup.type === 'heart') {
-                // Heart power-up - clear emoji only
-                this.ctx.shadowBlur = 0;
-                this.ctx.font = 'bold 28px Arial';
-                this.ctx.textAlign = 'center';
-                this.ctx.textBaseline = 'middle';
-                this.ctx.fillText('❤️', 0, 0);
+                // Enhanced heart power-up with pulse
+                this.ctx.shadowBlur = 12;
+                this.ctx.shadowColor = '#FF1493';
                 
-                // Add pulse effect
-                const pulseScale = 1 + Math.sin(Date.now() * 0.01) * 0.1;
+                // Draw heart shape
+                this.ctx.fillStyle = '#FF1493';
+                this.ctx.strokeStyle = '#DC143C';
+                this.ctx.lineWidth = 2;
+                
+                powerup.beatTimer = (powerup.beatTimer || 0) + 0.15;
+                const pulseScale = 1 + Math.sin(powerup.beatTimer) * 0.2;
                 this.ctx.scale(pulseScale, pulseScale);
                 
+                this.ctx.beginPath();
+                const size = powerup.size * 0.3;
+                this.ctx.moveTo(0, -size * 0.3);
+                this.ctx.bezierCurveTo(-size * 0.5, -size * 0.8, -size * 1.2, -size * 0.3, 0, size * 0.5);
+                this.ctx.bezierCurveTo(size * 1.2, -size * 0.3, size * 0.5, -size * 0.8, 0, -size * 0.3);
+                this.ctx.fill();
+                this.ctx.stroke();
+                
+                // Add gleam effect
+                this.ctx.fillStyle = '#FFFFFF';
+                this.ctx.beginPath();
+                this.ctx.ellipse(-size * 0.3, -size * 0.4, size * 0.2, size * 0.1, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                
             } else {
-                // Default power-up - clear emoji
-                this.ctx.shadowBlur = 0;
-                this.ctx.font = 'bold 26px Arial';
-                this.ctx.textAlign = 'center';
-                this.ctx.textBaseline = 'middle';
-                this.ctx.fillText('✨', 0, 0);
+                // Default power-up
+                this.ctx.shadowBlur = 10;
+                this.ctx.shadowColor = '#00FFFF';
+                this.ctx.fillStyle = '#00FFFF';
+                this.ctx.beginPath();
+                this.ctx.arc(0, 0, powerup.size * 0.3, 0, Math.PI * 2);
+                this.ctx.fill();
             }
             
             this.ctx.restore();

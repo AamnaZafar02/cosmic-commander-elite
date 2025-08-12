@@ -1291,42 +1291,74 @@ body::before {
 }
 
 .direction-pad {
-    display: grid;
-    grid-template-rows: 1fr 1fr 1fr;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px;
-    width: 170px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
     pointer-events: none;
     position: relative;
+}
+
+.mobile-only-row {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
 }
 
 /* Enhanced cosmic styling for touch buttons */
 .touch-btn {
     pointer-events: auto;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    border-radius: 15px;
     background: 
         linear-gradient(135deg, 
             rgba(0, 212, 255, 0.3) 0%, 
             rgba(138, 43, 226, 0.25) 50%, 
             rgba(0, 100, 200, 0.3) 100%);
-    border: 3px solid rgba(0, 212, 255, 0.7);
+    border: 3px solid rgba(0, 212, 255, 0.8);
     color: #fff;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     user-select: none;
     touch-action: manipulation;
     box-shadow: 
-        0 4px 15px rgba(0, 212, 255, 0.3),
+        0 4px 15px rgba(0, 212, 255, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.2),
-        0 0 20px rgba(0, 150, 255, 0.4);
+        0 0 25px rgba(0, 150, 255, 0.5);
     position: relative;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    font-family: 'Orbitron', monospace;
+}
+
+.touch-btn i {
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+}
+
+/* Fire button special styling */
+.fire-btn {
+    width: 120px;
+    height: 80px;
+    background: 
+        linear-gradient(135deg, 
+            rgba(255, 68, 68, 0.4) 0%, 
+            rgba(255, 136, 0, 0.35) 50%, 
+            rgba(255, 0, 0, 0.4) 100%);
+    border: 3px solid rgba(255, 68, 68, 0.9);
+    box-shadow: 
+        0 4px 15px rgba(255, 68, 68, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 0 25px rgba(255, 68, 68, 0.5);
 }
 
 /* Cosmic glow effect for buttons */
@@ -1337,7 +1369,7 @@ body::before {
     left: -2px;
     right: -2px;
     bottom: -2px;
-    border-radius: 50%;
+    border-radius: 15px;
     background: linear-gradient(45deg, 
         rgba(0, 212, 255, 0.4) 0%, 
         rgba(138, 43, 226, 0.3) 25%, 
@@ -1455,28 +1487,138 @@ body::before {
     }
 }
 
-    /* Also show on small screens */
+/* Mobile responsive design */
 @media (max-width: 768px) {
     .mobile-controls {
         display: flex !important;
+        position: fixed;
         bottom: 0;
-        padding-bottom: 15px;
-        background: rgba(0, 0, 20, 0.6);
-        border-top: 1px solid rgba(0, 100, 255, 0.3);
-        padding-top: 10px;
-        backdrop-filter: blur(5px);
+        left: 0;
+        right: 0;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px 20px 20px;
+        background: rgba(0, 0, 20, 0.8);
+        border-top: 2px solid rgba(0, 212, 255, 0.4);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+    }
+    
+    .direction-pad {
+        flex: 1;
+        justify-content: flex-start;
+    }
+    
+    .mobile-only-row {
+        gap: 25px;
+    }
+    
+    .action-buttons {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
     }
     
     .touch-btn {
-        width: 52px;
-        height: 52px;
-        box-shadow: 0 0 8px rgba(0, 212, 255, 0.3);
-        font-size: 1.3rem;
+        width: 65px;
+        height: 65px;
+        font-size: 1.4rem;
+        box-shadow: 0 4px 12px rgba(0, 212, 255, 0.4);
     }
     
     .fire-btn {
-        width: 65px;
+        width: 85px;
         height: 65px;
+        font-size: 1.2rem;
+    }
+    
+    /* Adjust game area for mobile controls */
+    .game-container {
+        padding-bottom: 120px;
+    }
+    
+    .game-canvas {
+        max-height: calc(100vh - 220px);
+    }
+    
+    /* Hide desktop controls on mobile */
+    .game-controls {
+        display: none;
+    }
+    
+    /* Mobile header adjustments */
+    .game-header {
+        padding: 8px 15px;
+        flex-wrap: wrap;
+    }
+    
+    .header-left .logo span {
+        display: none;
+    }
+    
+    .header-center {
+        order: 3;
+        width: 100%;
+        margin-top: 8px;
+    }
+    
+    .daily-challenge {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+    }
+    
+    .challenge-desc {
+        font-size: 0.7rem;
+    }
+}
+
+/* Ultra-mobile (smaller phones) */
+@media (max-width: 480px) {
+    .touch-btn {
+        width: 55px;
+        height: 55px;
+        font-size: 1.2rem;
+    }
+    
+    .fire-btn {
+        width: 75px;
+        height: 55px;
+        font-size: 1rem;
+    }
+    
+    .mobile-only-row {
+        gap: 20px;
+    }
+    
+    .mobile-controls {
+        padding: 12px 15px 15px 15px;
+    }
+}
+
+/* Landscape mobile adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+    .game-header {
+        padding: 5px 15px;
+    }
+    
+    .header-center {
+        display: none;
+    }
+    
+    .mobile-controls {
+        padding: 10px 20px 15px 20px;
+    }
+    
+    .touch-btn {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .fire-btn {
+        width: 80px;
+        height: 60px;
+    }
+}
     }
     
     .game-main {
