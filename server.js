@@ -24,7 +24,7 @@ connectDB();
 // Middleware
 app.use(cors({
     origin: process.env.NODE_ENV === 'production' 
-        ? [process.env.FRONTEND_URL, process.env.RENDER_EXTERNAL_URL] 
+        ? ['https://cosmic-commander-elite.onrender.com', process.env.RENDER_EXTERNAL_URL] 
         : ['http://localhost:5000', 'http://127.0.0.1:5000', 'http://localhost:3000', 'http://127.0.0.1:3000', 'null'],
     credentials: true
 }));

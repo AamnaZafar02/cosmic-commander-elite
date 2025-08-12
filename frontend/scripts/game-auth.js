@@ -1,5 +1,7 @@
 // Game page authentication manager
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = window.location.hostname === 'cosmic-commander-elite.onrender.com' 
+    ? 'https://cosmic-commander-elite.onrender.com'
+    : 'http://localhost:5000';
 
 class GameAuthManager {
     constructor() {
