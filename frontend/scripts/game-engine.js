@@ -18,7 +18,7 @@ class GameEngine {
         // Game state
         this.isRunning = false;
         this.isPaused = false;
-        this.gameSpeed = 0.6; // BALANCED SPEED - Not too slow, not too fast
+        this.gameSpeed = 0.75; // PERFECTLY BALANCED SPEED - Smooth and responsive
         this.lastTime = 0;
         this.deltaTime = 0;
         this.targetFPS = 60; // Back to normal FPS
@@ -234,13 +234,13 @@ class GameEngine {
         this.deltaTime = currentTime - this.lastTime;
         this.lastTime = currentTime;
         
-        // Cap deltaTime to prevent large jumps and control speed
-        if (this.deltaTime > 50) this.deltaTime = 50;
-        if (this.deltaTime < 16) this.deltaTime = 16; // Minimum 16ms (60 FPS max)
+        // Cap deltaTime for consistent speed - optimized for smooth gameplay
+        if (this.deltaTime > 33) this.deltaTime = 33; // Max 33ms (30 FPS minimum)
+        if (this.deltaTime < 12) this.deltaTime = 12; // Min 12ms (stable frame rate)
 
         if (!this.isPaused) {
-            // Apply game speed control with smoother movement
-            this.update(this.deltaTime * this.gameSpeed);
+            // Apply balanced game speed for optimal performance
+            this.update(this.deltaTime * 0.85); // Slightly reduced for smoother movement
         }
         
         // Use high-quality rendering for better visuals
@@ -1016,9 +1016,11 @@ class GameEngine {
         this.ctx.closePath();
         this.ctx.fill();
 
-        // Draw a bright outline around the entire ship
+        // Draw a bright outline around the entire ship with enhanced visibility
         this.ctx.strokeStyle = 'rgba(255, 255, 255, 1.0)';
-        this.ctx.lineWidth = 3;
+        this.ctx.lineWidth = 4;
+        this.ctx.shadowColor = '#ffffff';
+        this.ctx.shadowBlur = 8;
         this.ctx.beginPath();
         this.ctx.moveTo(0, -this.player.height / 2 - 5);
         this.ctx.lineTo(-this.player.width / 2 - 5, this.player.height / 3 + 5);
@@ -1026,9 +1028,9 @@ class GameEngine {
         this.ctx.closePath();
         this.ctx.stroke();
 
-        // Main rocket body with enhanced glow
+        // Main rocket body with enhanced glow for maximum visibility
         this.ctx.shadowColor = '#00e4ff';
-        this.ctx.shadowBlur = 20;
+        this.ctx.shadowBlur = 25;
         this.ctx.fillStyle = '#00e4ff';
         this.ctx.beginPath();
         this.ctx.moveTo(0, -this.player.height / 2);
@@ -1037,13 +1039,17 @@ class GameEngine {
         this.ctx.closePath();
         this.ctx.fill();
 
-        // Add rocket emoji with improved glow
-        this.ctx.shadowBlur = 15;
+        // Add rocket emoji with maximum visibility
+        this.ctx.shadowBlur = 20;
         this.ctx.shadowColor = '#ffffff';
-        this.ctx.font = 'bold 46px Arial'; // Increased size
+        this.ctx.font = 'bold 50px Arial'; // Even larger size for better visibility
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
         this.ctx.fillStyle = '#ffffff'; // White for better contrast
+        
+        // Draw emoji multiple times for better visibility
+        this.ctx.fillText('🚀', 0, -5);
+        this.ctx.shadowBlur = 10;
         this.ctx.fillText('🚀', 0, -5);
 
         // Rocket nose cone with enhanced glow
@@ -1128,61 +1134,82 @@ class GameEngine {
             const centerY = enemy.y + enemy.height / 2;
             this.ctx.translate(centerX, centerY);
             
-            // Draw a stronger background glow
-            this.ctx.fillStyle = 'rgba(255, 50, 50, 0.25)';
-            this.ctx.shadowColor = 'rgba(255, 50, 50, 0.6)';
-            this.ctx.shadowBlur = 18;
+            // Draw a very strong background glow for maximum visibility
+            this.ctx.fillStyle = 'rgba(255, 60, 60, 0.35)';
+            this.ctx.shadowColor = 'rgba(255, 60, 60, 0.8)';
+            this.ctx.shadowBlur = 25;
             this.ctx.beginPath();
-            this.ctx.arc(0, 0, enemy.width * 0.7, 0, Math.PI * 2);
+            this.ctx.arc(0, 0, enemy.width * 0.8, 0, Math.PI * 2);
+            this.ctx.fill();
+            
+            // Add second glow layer for better contrast
+            this.ctx.fillStyle = 'rgba(255, 100, 100, 0.15)';
+            this.ctx.shadowBlur = 35;
+            this.ctx.beginPath();
+            this.ctx.arc(0, 0, enemy.width * 1.2, 0, Math.PI * 2);
             this.ctx.fill();
             
             // Then draw the emoji on top with stronger outline for better visibility
             if (enemy.type === 'alien_basic') {
-                // Draw outline
+                // Draw outline with enhanced visibility
                 this.ctx.strokeStyle = 'rgba(255, 255, 255, 1.0)';
-                this.ctx.lineWidth = 3;
+                this.ctx.lineWidth = 4;
+                this.ctx.shadowColor = '#ffffff';
+                this.ctx.shadowBlur = 6;
                 this.ctx.beginPath();
-                this.ctx.arc(0, 0, enemy.width * 0.5, 0, Math.PI * 2);
+                this.ctx.arc(0, 0, enemy.width * 0.6, 0, Math.PI * 2);
                 this.ctx.stroke();
                 
-                // Basic alien with increased size and better clarity
-                this.ctx.shadowBlur = 12;
+                // Basic alien with maximum size and clarity
+                this.ctx.shadowBlur = 18;
                 this.ctx.shadowColor = '#ffffff';
-                this.ctx.font = 'bold 42px Arial';  // Increased size
+                this.ctx.font = 'bold 48px Arial';  // Even larger size
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
                 this.ctx.fillStyle = '#ffffff';  // White text for better contrast
+                
+                // Draw emoji multiple times for maximum visibility
+                this.ctx.fillText('👽', 0, 0);
+                this.ctx.shadowBlur = 8;
                 this.ctx.fillText('👽', 0, 0);
                 
             } else if (enemy.type === 'alien_advanced') {
-                // Draw outline
+                // Draw outline with enhanced visibility
                 this.ctx.strokeStyle = 'rgba(255, 255, 255, 1.0)';
-                this.ctx.lineWidth = 3;
+                this.ctx.lineWidth = 4;
+                this.ctx.shadowColor = '#ffffff';
+                this.ctx.shadowBlur = 6;
                 this.ctx.beginPath();
-                this.ctx.arc(0, 0, enemy.width * 0.5, 0, Math.PI * 2);
+                this.ctx.arc(0, 0, enemy.width * 0.6, 0, Math.PI * 2);
                 this.ctx.stroke();
                 
-                // Advanced alien with increased size and better clarity
-                this.ctx.shadowBlur = 12;
+                // Advanced alien with maximum size and clarity
+                this.ctx.shadowBlur = 18;
                 this.ctx.shadowColor = '#ffffff';
-                this.ctx.font = 'bold 44px Arial';  // Increased size
+                this.ctx.font = 'bold 50px Arial';  // Even larger size
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
                 this.ctx.fillStyle = '#ffffff';  // White text for better contrast
+                
+                // Draw emoji multiple times for maximum visibility
+                this.ctx.fillText('👾', 0, 0);
+                this.ctx.shadowBlur = 8;
                 this.ctx.fillText('👾', 0, 0);
                 
             } else if (enemy.type === 'alien_boss') {
-                // Draw outline
-                this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-                this.ctx.lineWidth = 3;
+                // Draw outline with maximum visibility for boss
+                this.ctx.strokeStyle = 'rgba(255, 255, 255, 1.0)';
+                this.ctx.lineWidth = 5;
+                this.ctx.shadowColor = '#ffff00';
+                this.ctx.shadowBlur = 10;
                 this.ctx.beginPath();
-                this.ctx.arc(0, 0, enemy.width * 0.5, 0, Math.PI * 2);
+                this.ctx.arc(0, 0, enemy.width * 0.7, 0, Math.PI * 2);
                 this.ctx.stroke();
                 
-                // Boss alien with increased size
-                this.ctx.shadowBlur = 15;
+                // Boss alien with maximum size and golden glow
+                this.ctx.shadowBlur = 25;
                 this.ctx.shadowColor = '#ffff00';
-                this.ctx.font = 'bold 45px Arial';  // Increased size
+                this.ctx.font = 'bold 55px Arial';  // Largest size for boss
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
                 this.ctx.fillStyle = '#ffffff';  // White text for better contrast
