@@ -18,7 +18,7 @@ class GameEngine {
         // Game state
         this.isRunning = false;
         this.isPaused = false;
-        this.gameSpeed = 1;
+        this.gameSpeed = 0.7; // Slower speed for better control
         this.lastTime = 0;
         this.deltaTime = 0;
         this.targetFPS = 60;
@@ -108,8 +108,8 @@ class GameEngine {
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 
                 if (distance > 5) {
-                    this.player.x += (dx / distance) * this.player.speed;
-                    this.player.y += (dy / distance) * this.player.speed;
+                    this.player.x += (dx / distance) * this.player.speed * 0.6; // Slower mouse movement
+                    this.player.y += (dy / distance) * this.player.speed * 0.6;
                     
                     // Keep player within bounds
                     this.player.x = Math.max(0, Math.min(this.width - this.player.width, this.player.x));
@@ -192,11 +192,13 @@ class GameEngine {
         this.deltaTime = currentTime - this.lastTime;
         this.lastTime = currentTime;
         
-        // Cap deltaTime to prevent large jumps (when tab loses focus)
+        // Cap deltaTime to prevent large jumps and control speed
         if (this.deltaTime > 50) this.deltaTime = 50;
+        if (this.deltaTime < 16) this.deltaTime = 16; // Minimum 16ms (60 FPS max)
 
         if (!this.isPaused) {
-            this.update(this.deltaTime);
+            // Apply game speed control
+            this.update(this.deltaTime * this.gameSpeed);
         }
         
         this.render();
@@ -255,7 +257,7 @@ class GameEngine {
         }
 
         // Apply movement with bounds checking and deltaTime
-        const moveSpeed = this.player.speed * (deltaTime * 0.2); // Normalize movement speed
+        const moveSpeed = this.player.speed * (deltaTime * 0.12); // Slower movement speed
         this.player.x += moveX * moveSpeed;
         this.player.y += moveY * moveSpeed;
 
@@ -420,7 +422,7 @@ class GameEngine {
     spawnEnemies(deltaTime) {
         this.enemySpawnTimer += deltaTime;
         
-        if (this.enemySpawnTimer > 1200) { // Spawn every 1.2 seconds
+        if (this.enemySpawnTimer > 2000) { // Spawn every 2 seconds (slower)
             this.enemySpawnTimer = 0;
             
             const enemyType = Math.random();
