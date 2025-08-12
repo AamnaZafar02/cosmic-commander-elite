@@ -18,7 +18,7 @@ class GameEngine {
         // Game state
         this.isRunning = false;
         this.isPaused = false;
-        this.gameSpeed = 0.7; // Slower speed for better control
+        this.gameSpeed = 0.4; // Much slower speed
         this.lastTime = 0;
         this.deltaTime = 0;
         this.targetFPS = 60;
@@ -39,8 +39,18 @@ class GameEngine {
         this.keys = {};
         this.mousePos = { x: 0, y: 0 };
         
+        // Mobile touch controls
+        this.touchControls = {
+            up: false,
+            down: false,
+            left: false,
+            right: false,
+            fire: false
+        };
+        
         this.initializeInput();
         this.setupStarField();
+        this.initializeMobileControls();
     }
 
     initializeInput() {
@@ -70,57 +80,22 @@ class GameEngine {
             }
         });
 
-        // Touch input for mobile - Enhanced
+        // Touch input for mobile - DISABLED for button controls
         this.touchStartX = 0;
         this.touchStartY = 0;
         this.isTouching = false;
         
+        // Disable direct canvas touch - use buttons instead
         this.canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            const rect = this.canvas.getBoundingClientRect();
-            const touch = e.touches[0];
-            this.touchStartX = touch.clientX - rect.left;
-            this.touchStartY = touch.clientY - rect.top;
-            this.mousePos.x = this.touchStartX;
-            this.mousePos.y = this.touchStartY;
-            this.isTouching = true;
-            
-            if (this.isRunning) {
-                this.shoot();
-            }
+            e.preventDefault(); // Prevent default but don't move player
         });
 
         this.canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            const rect = this.canvas.getBoundingClientRect();
-            const touch = e.touches[0];
-            this.mousePos.x = touch.clientX - rect.left;
-            this.mousePos.y = touch.clientY - rect.top;
-            
-            // Move player to touch position if touching
-            if (this.isTouching && this.player) {
-                const targetX = this.mousePos.x - this.player.width / 2;
-                const targetY = this.mousePos.y - this.player.height / 2;
-                
-                // Smooth movement towards touch position
-                const dx = targetX - this.player.x;
-                const dy = targetY - this.player.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance > 5) {
-                    this.player.x += (dx / distance) * this.player.speed * 0.6; // Slower mouse movement
-                    this.player.y += (dy / distance) * this.player.speed * 0.6;
-                    
-                    // Keep player within bounds
-                    this.player.x = Math.max(0, Math.min(this.width - this.player.width, this.player.x));
-                    this.player.y = Math.max(0, Math.min(this.height - this.player.height, this.player.y));
-                }
-            }
+            e.preventDefault(); // Prevent scrolling
         });
         
         this.canvas.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            this.isTouching = false;
+            e.preventDefault(); // Prevent default
         });
     }
 
@@ -167,6 +142,73 @@ class GameEngine {
         this.doubleShot = false;
         this.doubleShotTime = 0;
         this.initializePlayer();
+    }
+
+    initializeMobileControls() {
+        // Mobile touch buttons
+        const upBtn = document.getElementById('upBtn');
+        const downBtn = document.getElementById('downBtn');
+        const leftBtn = document.getElementById('leftBtn');
+        const rightBtn = document.getElementById('rightBtn');
+        const fireBtn = document.getElementById('fireBtn');
+
+        if (upBtn) {
+            upBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.touchControls.up = true;
+            });
+            upBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.touchControls.up = false;
+            });
+        }
+
+        if (downBtn) {
+            downBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.touchControls.down = true;
+            });
+            downBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.touchControls.down = false;
+            });
+        }
+
+        if (leftBtn) {
+            leftBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.touchControls.left = true;
+            });
+            leftBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.touchControls.left = false;
+            });
+        }
+
+        if (rightBtn) {
+            rightBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.touchControls.right = true;
+            });
+            rightBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.touchControls.right = false;
+            });
+        }
+
+        if (fireBtn) {
+            fireBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.touchControls.fire = true;
+                if (this.isRunning) {
+                    this.shoot();
+                }
+            });
+            fireBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.touchControls.fire = false;
+            });
+        }
     }
 
     initializePlayer() {
@@ -239,10 +281,11 @@ class GameEngine {
             }
         }
 
-        // Smooth keyboard movement
+        // Smooth keyboard and mobile movement
         let moveX = 0;
         let moveY = 0;
 
+        // Keyboard controls
         if (this.keys['KeyA'] || this.keys['ArrowLeft']) {
             moveX = -1;
         }
@@ -256,8 +299,27 @@ class GameEngine {
             moveY = 1;
         }
 
+        // Mobile touch controls
+        if (this.touchControls.left) {
+            moveX = -1;
+        }
+        if (this.touchControls.right) {
+            moveX = 1;
+        }
+        if (this.touchControls.up) {
+            moveY = -1;
+        }
+        if (this.touchControls.down) {
+            moveY = 1;
+        }
+
+        // Continuous fire for mobile
+        if (this.touchControls.fire && this.isRunning) {
+            this.shoot();
+        }
+
         // Apply movement with bounds checking and deltaTime
-        const moveSpeed = this.player.speed * (deltaTime * 0.12); // Slower movement speed
+        const moveSpeed = this.player.speed * (deltaTime * 0.03); // Ultra slow movement
         this.player.x += moveX * moveSpeed;
         this.player.y += moveY * moveSpeed;
 
@@ -422,7 +484,7 @@ class GameEngine {
     spawnEnemies(deltaTime) {
         this.enemySpawnTimer += deltaTime;
         
-        if (this.enemySpawnTimer > 2000) { // Spawn every 2 seconds (slower)
+        if (this.enemySpawnTimer > 3000) { // Spawn every 3 seconds (much slower)
             this.enemySpawnTimer = 0;
             
             const enemyType = Math.random();
