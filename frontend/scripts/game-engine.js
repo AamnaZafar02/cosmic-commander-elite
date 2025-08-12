@@ -211,13 +211,20 @@ class GameEngine {
         this.deltaTime = currentTime - this.lastTime;
         this.lastTime = currentTime;
         
-        // Fixed deltaTime for smooth movement on live servers
-        if (this.deltaTime > 33) this.deltaTime = 16; // Cap at reasonable time
-        if (this.deltaTime < 10) this.deltaTime = 16; // Consistent frame time
+        // Improved deltaTime for smoother movement on live servers
+        if (this.deltaTime > 40) this.deltaTime = 16; // Cap at reasonable time
+        if (this.deltaTime < 8) this.deltaTime = 16; // Consistent frame time
+        
+        // Smooth deltaTime averaging for consistent movement
+        if (!this.lastDeltaTimes) this.lastDeltaTimes = [];
+        this.lastDeltaTimes.push(this.deltaTime);
+        if (this.lastDeltaTimes.length > 3) this.lastDeltaTimes.shift();
+        
+        const avgDeltaTime = this.lastDeltaTimes.reduce((sum, dt) => sum + dt, 0) / this.lastDeltaTimes.length;
 
         if (!this.isPaused) {
-            // Fixed game speed for smooth performance
-            this.update(this.deltaTime * 1.0); // Normal speed multiplier
+            // Use averaged deltaTime for smoother movement
+            this.update(avgDeltaTime * 1.0); // Normal speed multiplier
         }
         
         // Enable smoothing for better visuals
@@ -359,7 +366,7 @@ class GameEngine {
     }
 
     updateBullets(deltaTime) {
-        const speed = deltaTime * 0.25; // Faster bullet speed for better gameplay
+        const speed = deltaTime * 0.24; // Reduced by 0.01 for better visibility
         this.bullets = this.bullets.filter(bullet => {
             bullet.y -= bullet.speed * speed;
             return bullet.y > -bullet.height;
@@ -367,7 +374,7 @@ class GameEngine {
     }
 
     updateEnemyBullets(deltaTime) {
-        const speed = deltaTime * 0.20; // Faster enemy bullet speed
+        const speed = deltaTime * 0.30; // Much faster enemy bullet speed
         this.enemyBullets = this.enemyBullets.filter(bullet => {
             bullet.y += bullet.speed * speed;
             return bullet.y < this.height + bullet.height;
@@ -375,7 +382,7 @@ class GameEngine {
     }
 
     updateEnemies(deltaTime) {
-        const speed = deltaTime * 0.08; // Fixed enemy movement speed
+        const speed = deltaTime * 0.15; // Increased enemy movement speed for smoother motion
         this.enemies.forEach(enemy => {
             enemy.y += enemy.speed * speed;
             
@@ -387,7 +394,7 @@ class GameEngine {
                     y: enemy.y + enemy.height,
                     width: 4,
                     height: 12,
-                    speed: 8, // Faster enemy bullets for better challenge
+                    speed: 12, // Much faster enemy bullets for proper challenge
                     damage: 1
                 });
                 
@@ -400,7 +407,7 @@ class GameEngine {
     }
 
     updateObstacles(deltaTime) {
-        const speed = deltaTime * 0.08; // Fixed obstacle speed
+        const speed = deltaTime * 0.15; // Increased obstacle speed for smoother motion
         this.obstacles.forEach(obstacle => {
             obstacle.y += obstacle.speed * speed;
             obstacle.rotation += obstacle.rotationSpeed * deltaTime * 0.1;
@@ -410,7 +417,7 @@ class GameEngine {
     }
 
     updatePowerups(deltaTime) {
-        const speed = deltaTime * 0.08; // Fixed powerup speed to match enemies
+        const speed = deltaTime * 0.15; // Increased powerup speed to match enemies
         this.powerups.forEach(powerup => {
             powerup.y += powerup.speed * speed;
             powerup.rotation += 0.05 * deltaTime * 0.1;
