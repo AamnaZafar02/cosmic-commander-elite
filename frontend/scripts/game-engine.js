@@ -367,7 +367,7 @@ class GameEngine {
     }
 
     updateEnemyBullets(deltaTime) {
-        const speed = deltaTime * 0.12; // Fixed enemy bullet speed
+        const speed = deltaTime * 0.20; // Faster enemy bullet speed
         this.enemyBullets = this.enemyBullets.filter(bullet => {
             bullet.y += bullet.speed * speed;
             return bullet.y < this.height + bullet.height;
@@ -387,7 +387,7 @@ class GameEngine {
                     y: enemy.y + enemy.height,
                     width: 4,
                     height: 12,
-                    speed: 5, // Reduced speed for better gameplay
+                    speed: 8, // Faster enemy bullets for better challenge
                     damage: 1
                 });
                 
