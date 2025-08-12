@@ -47,8 +47,12 @@ class GameManager {
 
         // Game over modal buttons
         document.getElementById('playAgainBtn').addEventListener('click', () => {
+            console.log("Play Again clicked");
             this.hideModal('gameOverModal');
-            this.startGame();
+            this.resetGame();
+            setTimeout(() => {
+                this.startGame();
+            }, 100);
         });
 
         document.getElementById('backToMenuBtn').addEventListener('click', () => {
@@ -99,6 +103,7 @@ class GameManager {
     }
 
     resetGame() {
+        console.log("RESET GAME CALLED");
         // Reset game statistics
         this.score = 0;
         this.lives = 3;
@@ -112,13 +117,21 @@ class GameManager {
         this.dailyChallenge.progress = 0;
         this.dailyChallenge.completed = false;
         
-        // Reset engine
+        // Reset engine properly with complete reload
         this.engine.stop();
         this.engine.reset();
+        this.engine = new GameEngine(document.getElementById('gameCanvas'));
+        this.engine.initializePlayer();
         
         // Clear timer
         if (this.gameTimer) {
             clearInterval(this.gameTimer);
+        }
+        
+        // Hide game over screen
+        const gameOverModal = document.getElementById('gameOverModal');
+        if (gameOverModal) {
+            gameOverModal.style.display = 'none';
         }
         
         this.updateUI();

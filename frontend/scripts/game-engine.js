@@ -18,10 +18,10 @@ class GameEngine {
         // Game state
         this.isRunning = false;
         this.isPaused = false;
-        this.gameSpeed = 0.4; // Much slower speed
+        this.gameSpeed = 0.25; // ULTRA SLOW SPEED FOR MOBILE
         this.lastTime = 0;
         this.deltaTime = 0;
-        this.targetFPS = 60;
+        this.targetFPS = 30; // Reduced FPS for mobile
         this.frameTime = 1000 / this.targetFPS;
         this.enemySpawnTimer = 0;
         this.obstacleSpawnTimer = 0;
@@ -482,10 +482,13 @@ class GameEngine {
     }
 
     spawnEnemies(deltaTime) {
-        this.enemySpawnTimer += deltaTime;
+        // FORCE ENEMY SPAWN
+        this.enemySpawnTimer += deltaTime * 2; // Double speed for timer
         
-        if (this.enemySpawnTimer > 3000) { // Spawn every 3 seconds (much slower)
+        // Ensure enemies spawn by lowering the threshold
+        if (this.enemySpawnTimer > 1500) { // Spawn every 1.5 seconds
             this.enemySpawnTimer = 0;
+            console.log("SPAWNING ENEMY");
             
             const enemyType = Math.random();
             let enemy;
