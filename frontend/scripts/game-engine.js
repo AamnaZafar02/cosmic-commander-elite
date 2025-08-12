@@ -239,11 +239,15 @@ class GameEngine {
         if (this.deltaTime < 16) this.deltaTime = 16; // Minimum 16ms (60 FPS max)
 
         if (!this.isPaused) {
-            // Apply game speed control
+            // Apply game speed control with smoother movement
             this.update(this.deltaTime * this.gameSpeed);
         }
         
+        // Use high-quality rendering for better visuals
+        this.ctx.imageSmoothingQuality = 'high';
         this.render();
+        
+        // Use timeout with requestAnimationFrame to maintain steady frame rate
         requestAnimationFrame((time) => this.gameLoop(time));
     }
 
@@ -881,7 +885,29 @@ class GameEngine {
 
     render() {
         // Clear canvas with space background
-        this.ctx.fillStyle = 'rgba(0, 8, 20, 0.3)';
+        this.ctx.fillStyle = 'rgba(4, 0, 20, 0.95)';
+        this.ctx.fillRect(0, 0, this.width, this.height);
+        
+        // Add cosmic nebula effect
+        const gradient = this.ctx.createRadialGradient(
+            this.width * 0.3, this.height * 0.2, 0,
+            this.width * 0.3, this.height * 0.2, this.width * 0.8
+        );
+        gradient.addColorStop(0, 'rgba(20, 0, 50, 0.15)');
+        gradient.addColorStop(0.5, 'rgba(0, 20, 60, 0.05)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, this.width, this.height);
+        
+        // Add a second nebula for depth
+        const gradient2 = this.ctx.createRadialGradient(
+            this.width * 0.7, this.height * 0.8, 0,
+            this.width * 0.7, this.height * 0.8, this.width * 0.6
+        );
+        gradient2.addColorStop(0, 'rgba(50, 0, 80, 0.1)');
+        gradient2.addColorStop(0.6, 'rgba(0, 30, 70, 0.03)');
+        gradient2.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        this.ctx.fillStyle = gradient2;
         this.ctx.fillRect(0, 0, this.width, this.height);
 
         // Draw stars
@@ -915,12 +941,40 @@ class GameEngine {
         this.stars.forEach(star => {
             this.ctx.save();
             star.twinkle += 0.1;
-            star.opacity = 0.3 + Math.sin(star.twinkle) * 0.3;
+            
+            // More dynamic twinkling
+            star.opacity = 0.5 + Math.sin(star.twinkle) * 0.5;
+            
+            // Add some color variation to stars
+            const hue = (star.size * 50) % 360; // Size-based hue variation
+            const saturation = 20 + Math.sin(star.twinkle * 0.5) * 20; // Changing saturation
+            
             this.ctx.globalAlpha = star.opacity;
-            this.ctx.fillStyle = '#ffffff';
-            this.ctx.shadowColor = '#ffffff';
-            this.ctx.shadowBlur = star.size;
-            this.ctx.fillRect(star.x, star.y, star.size, star.size);
+            
+            // Larger stars get colored, smaller stars stay white
+            if (star.size > 1.5) {
+                this.ctx.fillStyle = `hsla(${hue}, ${saturation}%, 90%, 1)`;
+                this.ctx.shadowColor = `hsla(${hue}, ${saturation}%, 80%, 1)`;
+            } else {
+                this.ctx.fillStyle = '#ffffff';
+                this.ctx.shadowColor = '#ffffff';
+            }
+            
+            this.ctx.shadowBlur = star.size * 2;
+            
+            // Draw circular stars for better appearance
+            this.ctx.beginPath();
+            this.ctx.arc(star.x, star.y, star.size / 1.5, 0, Math.PI * 2);
+            this.ctx.fill();
+            
+            // Add extra glow to larger stars
+            if (star.size > 2) {
+                this.ctx.beginPath();
+                this.ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                this.ctx.globalAlpha = star.opacity * 0.3;
+                this.ctx.fill();
+            }
+            
             this.ctx.restore();
         });
     }
@@ -940,31 +994,42 @@ class GameEngine {
         
         this.ctx.translate(centerX, centerY);
         
-        // Engine thrust
-        this.ctx.fillStyle = '#ffaa00';
-        this.ctx.shadowColor = '#ffaa00';
-        this.ctx.shadowBlur = 15;
+        // Engine thrust with enhanced glow
+        this.ctx.fillStyle = '#ffcc00';
+        this.ctx.shadowColor = '#ffcc00';
+        this.ctx.shadowBlur = 25;
         this.ctx.beginPath();
-        this.ctx.moveTo(-12, this.player.height / 2 - 5);
-        this.ctx.lineTo(0, this.player.height / 2 + 15 + this.player.thrustOffset);
-        this.ctx.lineTo(12, this.player.height / 2 - 5);
+        this.ctx.moveTo(-14, this.player.height / 2 - 5);
+        this.ctx.lineTo(0, this.player.height / 2 + 20 + this.player.thrustOffset);
+        this.ctx.lineTo(14, this.player.height / 2 - 5);
         this.ctx.closePath();
         this.ctx.fill();
         
-        // Blue inner thrust
-        this.ctx.fillStyle = '#00aaff';
-        this.ctx.shadowBlur = 8;
+        // Blue inner thrust with enhanced glow
+        this.ctx.fillStyle = '#00ccff';
+        this.ctx.shadowColor = '#00ccff';
+        this.ctx.shadowBlur = 20;
         this.ctx.beginPath();
-        this.ctx.moveTo(-6, this.player.height / 2 - 2);
-        this.ctx.lineTo(0, this.player.height / 2 + 8 + this.player.thrustOffset);
-        this.ctx.lineTo(6, this.player.height / 2 - 2);
+        this.ctx.moveTo(-7, this.player.height / 2 - 2);
+        this.ctx.lineTo(0, this.player.height / 2 + 12 + this.player.thrustOffset);
+        this.ctx.lineTo(7, this.player.height / 2 - 2);
         this.ctx.closePath();
         this.ctx.fill();
 
-        // Main rocket body
-        this.ctx.shadowColor = '#00d4ff';
-        this.ctx.shadowBlur = 10;
-        this.ctx.fillStyle = '#00d4ff';
+        // Draw a bright outline around the entire ship
+        this.ctx.strokeStyle = 'rgba(255, 255, 255, 1.0)';
+        this.ctx.lineWidth = 3;
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, -this.player.height / 2 - 5);
+        this.ctx.lineTo(-this.player.width / 2 - 5, this.player.height / 3 + 5);
+        this.ctx.lineTo(this.player.width / 2 + 5, this.player.height / 3 + 5);
+        this.ctx.closePath();
+        this.ctx.stroke();
+
+        // Main rocket body with enhanced glow
+        this.ctx.shadowColor = '#00e4ff';
+        this.ctx.shadowBlur = 20;
+        this.ctx.fillStyle = '#00e4ff';
         this.ctx.beginPath();
         this.ctx.moveTo(0, -this.player.height / 2);
         this.ctx.lineTo(-this.player.width / 3, this.player.height / 3);
@@ -972,32 +1037,37 @@ class GameEngine {
         this.ctx.closePath();
         this.ctx.fill();
 
-        // Add rocket emoji (clear, no background)
-        this.ctx.shadowBlur = 0;
-        this.ctx.font = 'bold 40px Arial'; // Increased size
+        // Add rocket emoji with improved glow
+        this.ctx.shadowBlur = 15;
+        this.ctx.shadowColor = '#ffffff';
+        this.ctx.font = 'bold 46px Arial'; // Increased size
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
         this.ctx.fillStyle = '#ffffff'; // White for better contrast
         this.ctx.fillText('🚀', 0, -5);
 
-        // Rocket nose cone
+        // Rocket nose cone with enhanced glow
         this.ctx.fillStyle = '#ffffff';
-        this.ctx.shadowBlur = 5;
+        this.ctx.shadowColor = '#ffffff';
+        this.ctx.shadowBlur = 15;
         this.ctx.beginPath();
         this.ctx.moveTo(0, -this.player.height / 2);
-        this.ctx.lineTo(-8, -this.player.height / 4);
-        this.ctx.lineTo(8, -this.player.height / 4);
+        this.ctx.lineTo(-9, -this.player.height / 4);
+        this.ctx.lineTo(9, -this.player.height / 4);
         this.ctx.closePath();
         this.ctx.fill();
 
-        // Side fins
-        this.ctx.fillStyle = '#0088cc';
-        this.ctx.fillRect(-this.player.width / 2, 0, 8, 20);
-        this.ctx.fillRect(this.player.width / 2 - 8, 0, 8, 20);
+        // Side fins with enhanced color
+        this.ctx.fillStyle = '#0099dd';
+        this.ctx.shadowColor = '#0099dd';
+        this.ctx.shadowBlur = 12;
+        this.ctx.fillRect(-this.player.width / 2, 0, 9, 22);
+        this.ctx.fillRect(this.player.width / 2 - 9, 0, 9, 22);
         
-        // Cockpit window
+        // Cockpit window with enhanced glow
         this.ctx.fillStyle = '#88ddff';
-        this.ctx.shadowBlur = 3;
+        this.ctx.shadowColor = '#88ddff';
+        this.ctx.shadowBlur = 12;
         this.ctx.fillRect(-4, -10, 8, 12);
 
         this.ctx.restore();
@@ -1008,26 +1078,28 @@ class GameEngine {
             this.ctx.save();
             
             if (bullet.type === 'double') {
-                this.ctx.fillStyle = '#ffaa00';
-                this.ctx.shadowColor = '#ffaa00';
+                this.ctx.fillStyle = '#ffcc00';
+                this.ctx.shadowColor = '#ffcc00';
             } else {
-                this.ctx.fillStyle = '#00d4ff';
-                this.ctx.shadowColor = '#00d4ff';
+                this.ctx.fillStyle = '#00e4ff';
+                this.ctx.shadowColor = '#00e4ff';
             }
             
-            this.ctx.shadowBlur = 8;
+            this.ctx.shadowBlur = 12;
             this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
             
             // Add bullet emoji (clear, no background)
-            this.ctx.shadowBlur = 0;
-            this.ctx.font = 'bold 16px Arial';
+            this.ctx.shadowBlur = 6;
+            this.ctx.shadowColor = '#ffffff';
+            this.ctx.font = 'bold 18px Arial';
             this.ctx.textAlign = 'center';
             this.ctx.textBaseline = 'middle';
+            this.ctx.fillStyle = '#ffffff';
             this.ctx.fillText('⚡', bullet.x + bullet.width/2, bullet.y + bullet.height/2);
             
             // Add energy trail
-            this.ctx.globalAlpha = 0.6;
-            this.ctx.fillRect(bullet.x - 1, bullet.y + bullet.height, bullet.width + 2, 8);
+            this.ctx.globalAlpha = 0.7;
+            this.ctx.fillRect(bullet.x - 1, bullet.y + bullet.height, bullet.width + 2, 10);
             
             this.ctx.restore();
         });
@@ -1056,45 +1128,70 @@ class GameEngine {
             const centerY = enemy.y + enemy.height / 2;
             this.ctx.translate(centerX, centerY);
             
-            // Draw a subtle background glow without red shadow
-            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-            this.ctx.shadowColor = 'rgba(0, 212, 255, 0.3)';
-            this.ctx.shadowBlur = 5;
+            // Draw a stronger background glow
+            this.ctx.fillStyle = 'rgba(255, 50, 50, 0.25)';
+            this.ctx.shadowColor = 'rgba(255, 50, 50, 0.6)';
+            this.ctx.shadowBlur = 18;
             this.ctx.beginPath();
-            this.ctx.arc(0, 0, enemy.width * 0.4, 0, Math.PI * 2);
+            this.ctx.arc(0, 0, enemy.width * 0.7, 0, Math.PI * 2);
             this.ctx.fill();
             
-            // Then draw the emoji on top for better visibility
+            // Then draw the emoji on top with stronger outline for better visibility
             if (enemy.type === 'alien_basic') {
-                // Basic alien - clear emoji
-                this.ctx.shadowBlur = 0;
-                this.ctx.font = 'bold 35px Arial';  // Increased size
+                // Draw outline
+                this.ctx.strokeStyle = 'rgba(255, 255, 255, 1.0)';
+                this.ctx.lineWidth = 3;
+                this.ctx.beginPath();
+                this.ctx.arc(0, 0, enemy.width * 0.5, 0, Math.PI * 2);
+                this.ctx.stroke();
+                
+                // Basic alien with increased size and better clarity
+                this.ctx.shadowBlur = 12;
+                this.ctx.shadowColor = '#ffffff';
+                this.ctx.font = 'bold 42px Arial';  // Increased size
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
                 this.ctx.fillStyle = '#ffffff';  // White text for better contrast
                 this.ctx.fillText('👽', 0, 0);
                 
             } else if (enemy.type === 'alien_advanced') {
-                // Advanced alien - clear emoji
-                this.ctx.shadowBlur = 0;
-                this.ctx.font = 'bold 38px Arial';  // Increased size
+                // Draw outline
+                this.ctx.strokeStyle = 'rgba(255, 255, 255, 1.0)';
+                this.ctx.lineWidth = 3;
+                this.ctx.beginPath();
+                this.ctx.arc(0, 0, enemy.width * 0.5, 0, Math.PI * 2);
+                this.ctx.stroke();
+                
+                // Advanced alien with increased size and better clarity
+                this.ctx.shadowBlur = 12;
+                this.ctx.shadowColor = '#ffffff';
+                this.ctx.font = 'bold 44px Arial';  // Increased size
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
                 this.ctx.fillStyle = '#ffffff';  // White text for better contrast
                 this.ctx.fillText('👾', 0, 0);
                 
             } else if (enemy.type === 'alien_boss') {
-                // Boss alien - clear emoji
-                this.ctx.shadowBlur = 0;
-                this.ctx.font = 'bold 40px Arial';  // Increased size
+                // Draw outline
+                this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                this.ctx.lineWidth = 3;
+                this.ctx.beginPath();
+                this.ctx.arc(0, 0, enemy.width * 0.5, 0, Math.PI * 2);
+                this.ctx.stroke();
+                
+                // Boss alien with increased size
+                this.ctx.shadowBlur = 15;
+                this.ctx.shadowColor = '#ffff00';
+                this.ctx.font = 'bold 45px Arial';  // Increased size
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
                 this.ctx.fillStyle = '#ffffff';  // White text for better contrast
                 this.ctx.fillText('🛸', 0, 0);
             } else {
                 // Fallback - ensure something is always visible
-                this.ctx.shadowBlur = 0;
-                this.ctx.font = 'bold 36px Arial';
+                this.ctx.shadowBlur = 10;
+                this.ctx.shadowColor = '#ffffff';
+                this.ctx.font = 'bold 40px Arial';
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
                 this.ctx.fillStyle = '#ffffff';
