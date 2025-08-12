@@ -217,11 +217,11 @@ class GameEngine {
             y: this.height - 120,
             width: 50,
             height: 60,
-            speed: 4.5, // Better balanced speed to match enemies
+            speed: 5.5, // Increased speed to match enemies
             health: 3,
             maxHealth: 3,
             lastShot: 0,
-            shootCooldown: 100, // Faster shooting
+            shootCooldown: 250, // Normal balanced shooting speed
             invulnerable: false,
             invulnerabilityTime: 0,
             thrustOffset: 0
@@ -377,7 +377,7 @@ class GameEngine {
                 y: startY,
                 width: 6,
                 height: 18,
-                speed: 20, // Faster bullets
+                speed: 7, // Matched with enemy speed
                 damage: 1,
                 type: 'normal'
             });

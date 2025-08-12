@@ -320,7 +320,7 @@ class GameAuthManager {
                 if (data.newHighScore) {
                     this.showSuccess('🎉 NEW HIGH SCORE! You\'ve earned your place among the Elite!');
                 } else {
-                    this.showSuccess('Score saved successfully, Commander!');
+                    this.showSuccess('Commander, see you next time!');
                 }
                 
                 // Reload leaderboard after successful score save
