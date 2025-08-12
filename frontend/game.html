@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Cosmic Commander Elite - Game</title>
-    <link rel="stylesheet" href="styles/game.css?v=4.0.0">
+    <link rel="stylesheet" href="styles/game.css?v=4.1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
@@ -268,6 +268,15 @@
             <div class="modal-header">
                 <i class="fas fa-rocket"></i>
                 <h2>Commander Access Required</h2>
+                <p style="color: #888; font-size: 0.9rem; margin: 10px 0;">Login to save your progress and compete on leaderboards</p>
+            </div>
+            
+            <!-- Play as Guest Option -->
+            <div style="text-align: center; margin-bottom: 20px;">
+                <button id="playAsGuestBtn" class="btn" style="background: rgba(100, 100, 100, 0.3); color: #fff; padding: 8px 20px; font-size: 0.9rem;">
+                    <i class="fas fa-play"></i>
+                    Play as Guest
+                </button>
             </div>
             
             <div class="auth-tabs">
@@ -334,8 +343,8 @@
     </div>
 
     <!-- Force cache refresh with timestamp -->
-    <script src="scripts/game-auth.js?v=3.0.3"></script>
+    <script src="scripts/game-auth.js?v=4.1.0"></script>
     <script src="scripts/game-engine.js?v=4.0.0"></script>
-    <script src="scripts/game.js?v=3.0.3"></script>
+    <script src="scripts/game.js?v=4.1.0"></script>
 </body>
 </html>

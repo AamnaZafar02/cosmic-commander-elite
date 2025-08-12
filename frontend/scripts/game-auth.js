@@ -10,6 +10,12 @@ class GameAuthManager {
         
         this.initializeEventListeners();
         this.checkAuthFromURL();
+        
+        // Ensure modal is hidden by default - login is optional
+        setTimeout(() => {
+            this.hideModal('loginModal');
+        }, 100);
+        
         this.updateUI();
     }
 
@@ -84,6 +90,15 @@ class GameAuthManager {
                 this.hideModal('loginModal');
             }
         });
+        
+        // Play as Guest button
+        const playAsGuestBtn = document.getElementById('playAsGuestBtn');
+        if (playAsGuestBtn) {
+            playAsGuestBtn.addEventListener('click', () => {
+                this.hideModal('loginModal');
+                // User can play as guest without login
+            });
+        }
     }
 
     checkAuthFromURL() {
@@ -133,16 +148,26 @@ class GameAuthManager {
                 document.getElementById('avatarIcon').style.display = 'none';
             }
         } else {
-            // User is not logged in
+            // User is not logged in - but allow game to be played
             if (loginBtn) loginBtn.style.display = 'block';
             if (logoutBtn) logoutBtn.style.display = 'none';
-            if (userInfo) userInfo.style.display = 'none';
+            if (userInfo) {
+                userInfo.style.display = 'flex';
+                // Show guest user info
+                if (userName) {
+                    userName.textContent = 'Guest Player';
+                }
+            }
+            
+            // Hide the login modal by default - make login optional
+            this.hideModal('loginModal');
         }
     }
 
     showModal(modalId) {
         const modal = document.getElementById(modalId);
         if (modal) {
+            modal.classList.add('show');
             modal.style.display = 'block';
         }
     }
@@ -150,6 +175,7 @@ class GameAuthManager {
     hideModal(modalId) {
         const modal = document.getElementById(modalId);
         if (modal) {
+            modal.classList.remove('show');
             modal.style.display = 'none';
         }
     }
