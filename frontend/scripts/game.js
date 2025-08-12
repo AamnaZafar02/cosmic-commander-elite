@@ -74,18 +74,21 @@ class GameManager {
         this.resetGame();
         this.engine.start();
         
-        // FORCE ENEMIES TO SPAWN INITIALLY - EXTREME SPAWNING
-        for (let i = 0; i < 15; i++) {
+        // FORCE ENEMIES TO SPAWN INITIALLY - BALANCED SPAWN
+        for (let i = 0; i < 4; i++) {
             this.engine.forceEnemySpawn();
         }
         
         // Setup continuous enemy spawning
         this.enemySpawnInterval = setInterval(() => {
             if (this.engine && this.engine.isRunning && !this.engine.isPaused) {
-                this.engine.forceEnemySpawn();
-                console.log("INTERVAL FORCE SPAWN");
+                // Only spawn if there aren't too many enemies already
+                if (this.engine.enemies.length < 8) {
+                    this.engine.forceEnemySpawn();
+                    console.log("INTERVAL FORCE SPAWN");
+                }
             }
-        }, 500); // Spawn faster
+        }, 1200); // More balanced spawn rate
         
         this.startTime = Date.now();
         this.gameTime = 0;

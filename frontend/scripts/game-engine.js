@@ -402,7 +402,7 @@ class GameEngine {
     }
 
     updateEnemyBullets(deltaTime) {
-        const speed = deltaTime * 0.3; // Normalize speed based on deltaTime
+        const speed = deltaTime * 0.2; // Reduced speed for enemy bullets
         this.enemyBullets = this.enemyBullets.filter(bullet => {
             bullet.y += bullet.speed * speed;
             return bullet.y < this.height + bullet.height;
@@ -422,12 +422,12 @@ class GameEngine {
                     y: enemy.y + enemy.height,
                     width: 4,
                     height: 12,
-                    speed: 8, // Fixed speed value
+                    speed: 5, // Reduced speed for better gameplay
                     damage: 1
                 });
                 
-                // Reset shoot timer with random interval
-                enemy.shootTimer = 1000 + Math.random() * 2000;
+                // Reset shoot timer with longer random interval
+                enemy.shootTimer = 2000 + Math.random() * 3000;
             }
         });
 
@@ -490,10 +490,10 @@ class GameEngine {
     
     spawnEnemies(deltaTime) {
         // ENEMY SPAWN SYSTEM
-        this.enemySpawnTimer += deltaTime * 5; // Increase timer speed
+        this.enemySpawnTimer += deltaTime * 2; // Balanced timer speed
         
-        // Ensure enemies spawn by lowering the threshold
-        if (this.enemySpawnTimer > 600) { // Spawn more frequently
+        // Only spawn if we don't already have too many enemies
+        if (this.enemySpawnTimer > 1500 && this.enemies.length < 8) { // More balanced spawn rate
             this.enemySpawnTimer = 0;
             
             const enemyType = Math.random();
@@ -506,43 +506,49 @@ class GameEngine {
             // enemyType is passed from calling function
             let enemy;
             
+            // Ensure enemies are spread out horizontally for better gameplay
+            // Divide canvas into 5 sections and randomly place in one section
+            const section = Math.floor(Math.random() * 5);
+            const sectionWidth = this.width / 5;
+            const xPosition = (section * sectionWidth) + (Math.random() * (sectionWidth - 60));
+            
             if (enemyType < 0.7) {
                 // Fast Scout (70% chance) - Fast but weak
                 enemy = {
-                    x: Math.random() * (this.width - 50),
+                    x: xPosition,
                     y: -50,
                     width: 45,
                     height: 35,
-                    speed: 3.5 + Math.random() * 2, // Fast: 3.5-5.5
+                    speed: 2 + Math.random() * 1, // Reduced speed: 2-3
                     health: 1,
                     type: 'alien_basic', // Changed to match rendering types
-                    shootTimer: 1500 + Math.random() * 1000,
+                    shootTimer: 2000 + Math.random() * 2000, // Shoot less frequently
                     color: '#ff4444'
                 };
             } else if (enemyType < 0.9) {
                 // Medium Fighter (20% chance) - Balanced
                 enemy = {
-                    x: Math.random() * (this.width - 60),
+                    x: xPosition,
                     y: -60,
                     width: 55,
                     height: 45,
-                    speed: 2 + Math.random() * 1.5, // Medium: 2-3.5
+                    speed: 1.5 + Math.random() * 1, // Reduced speed: 1.5-2.5
                     health: 2,
                     type: 'alien_advanced', // Changed to match rendering types
-                    shootTimer: 1000 + Math.random() * 1000,
+                    shootTimer: 2500 + Math.random() * 2000, // Shoot less frequently
                     color: '#ff6666'
                 };
             } else {
                 // Heavy Destroyer (10% chance) - Slow but strong
                 enemy = {
-                    x: Math.random() * (this.width - 80),
+                    x: xPosition,
                     y: -80,
                     width: 75,
                     height: 60,
-                    speed: 1 + Math.random() * 1, // Slow: 1-2
+                    speed: 0.8 + Math.random() * 0.7, // Reduced speed: 0.8-1.5
                     health: 3,
                     type: 'alien_boss', // Changed to match rendering types
-                    shootTimer: 800 + Math.random() * 800,
+                    shootTimer: 3000 + Math.random() * 2000, // Shoot less frequently
                     color: '#ff8888'
                 };
             }
