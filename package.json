@@ -1,7 +1,7 @@
 {
   "name": "cosmic-commander-elite",
-  "version": "1.0.0",
-  "description": "Professional Space Combat Experience",
+  "version": "1.0.1",
+  "description": "Professional Space Combat Experience - Enhanced Visibility",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

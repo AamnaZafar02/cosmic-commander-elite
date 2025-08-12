@@ -6,6 +6,7 @@ const path = require('path');
 const cors = require('cors');
 require('dotenv').config();
 
+// Updated: Enhanced visibility and optimized performance - v4.0.0
 // Import configurations and middleware
 const connectDB = require('./backend/config/database');
 require('./backend/config/passport');

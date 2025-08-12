@@ -1,4 +1,5 @@
 // Game Engine - Core game mechanics and rendering
+// Updated: v4.0.0 - Enhanced visibility, optimized performance, perfect speed balance
 class GameEngine {
     constructor(canvas) {
         this.canvas = canvas;
