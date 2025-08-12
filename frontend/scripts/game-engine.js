@@ -19,10 +19,10 @@ class GameEngine {
         // Game state
         this.isRunning = false;
         this.isPaused = false;
-        this.gameSpeed = 0.75; // PERFECTLY BALANCED SPEED - Smooth and responsive
+        this.gameSpeed = 1.0; // Perfect smooth speed
         this.lastTime = 0;
         this.deltaTime = 0;
-        this.targetFPS = 60; // Back to normal FPS
+        this.targetFPS = 60; // Smooth 60 FPS
         this.frameTime = 1000 / this.targetFPS;
         this.enemySpawnTimer = 0;
         this.obstacleSpawnTimer = 0;
@@ -998,41 +998,31 @@ class GameEngine {
         // Engine thrust with enhanced glow
         this.ctx.fillStyle = '#ffcc00';
         this.ctx.shadowColor = '#ffcc00';
-        this.ctx.shadowBlur = 25;
+        this.ctx.shadowBlur = 15;
         this.ctx.beginPath();
-        this.ctx.moveTo(-14, this.player.height / 2 - 5);
-        this.ctx.lineTo(0, this.player.height / 2 + 20 + this.player.thrustOffset);
-        this.ctx.lineTo(14, this.player.height / 2 - 5);
+        this.ctx.moveTo(-8, this.player.height / 2 - 3);
+        this.ctx.lineTo(0, this.player.height / 2 + 15 + this.player.thrustOffset);
+        this.ctx.lineTo(8, this.player.height / 2 - 3);
         this.ctx.closePath();
         this.ctx.fill();
         
-        // Blue inner thrust with enhanced glow
+        // Blue inner thrust
         this.ctx.fillStyle = '#00ccff';
         this.ctx.shadowColor = '#00ccff';
-        this.ctx.shadowBlur = 20;
+        this.ctx.shadowBlur = 10;
         this.ctx.beginPath();
-        this.ctx.moveTo(-7, this.player.height / 2 - 2);
-        this.ctx.lineTo(0, this.player.height / 2 + 12 + this.player.thrustOffset);
-        this.ctx.lineTo(7, this.player.height / 2 - 2);
+        this.ctx.moveTo(-4, this.player.height / 2 - 1);
+        this.ctx.lineTo(0, this.player.height / 2 + 8 + this.player.thrustOffset);
+        this.ctx.lineTo(4, this.player.height / 2 - 1);
         this.ctx.closePath();
         this.ctx.fill();
 
-        // Draw a bright outline around the entire ship with enhanced visibility
-        this.ctx.strokeStyle = 'rgba(255, 255, 255, 1.0)';
-        this.ctx.lineWidth = 4;
-        this.ctx.shadowColor = '#ffffff';
-        this.ctx.shadowBlur = 8;
-        this.ctx.beginPath();
-        this.ctx.moveTo(0, -this.player.height / 2 - 5);
-        this.ctx.lineTo(-this.player.width / 2 - 5, this.player.height / 3 + 5);
-        this.ctx.lineTo(this.player.width / 2 + 5, this.player.height / 3 + 5);
-        this.ctx.closePath();
-        this.ctx.stroke();
+        // Reset shadow for ship body
+        this.ctx.shadowBlur = 0;
+        this.ctx.shadowColor = 'transparent';
 
-        // Main rocket body with enhanced glow for maximum visibility
-        this.ctx.shadowColor = '#00e4ff';
-        this.ctx.shadowBlur = 25;
-        this.ctx.fillStyle = '#00e4ff';
+        // Main ship body - blue with yellow accents (like screenshot)
+        this.ctx.fillStyle = '#4A90E2'; // Blue body
         this.ctx.beginPath();
         this.ctx.moveTo(0, -this.player.height / 2);
         this.ctx.lineTo(-this.player.width / 3, this.player.height / 3);
@@ -1040,13 +1030,29 @@ class GameEngine {
         this.ctx.closePath();
         this.ctx.fill();
 
-        // Add rocket emoji with maximum visibility
-        this.ctx.shadowBlur = 20;
-        this.ctx.shadowColor = '#ffffff';
-        this.ctx.font = 'bold 50px Arial'; // Even larger size for better visibility
-        this.ctx.textAlign = 'center';
-        this.ctx.textBaseline = 'middle';
-        this.ctx.fillStyle = '#ffffff'; // White for better contrast
+        // Yellow cockpit/front section
+        this.ctx.fillStyle = '#FFD700';
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, -this.player.height / 2);
+        this.ctx.lineTo(-this.player.width / 6, this.player.height / 6);
+        this.ctx.lineTo(this.player.width / 6, this.player.height / 6);
+        this.ctx.closePath();
+        this.ctx.fill();
+
+        // Wing details
+        this.ctx.fillStyle = '#2E5C8A'; // Darker blue for wings
+        this.ctx.fillRect(-this.player.width / 3, this.player.height / 4, 8, 8);
+        this.ctx.fillRect(this.player.width / 3 - 8, this.player.height / 4, 8, 8);
+
+        // Ship outline for better visibility
+        this.ctx.strokeStyle = '#FFFFFF';
+        this.ctx.lineWidth = 2;
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, -this.player.height / 2);
+        this.ctx.lineTo(-this.player.width / 3, this.player.height / 3);
+        this.ctx.lineTo(this.player.width / 3, this.player.height / 3);
+        this.ctx.closePath();
+        this.ctx.stroke();
         
         // Draw emoji multiple times for better visibility
         this.ctx.fillText('🚀', 0, -5);
@@ -1135,95 +1141,124 @@ class GameEngine {
             const centerY = enemy.y + enemy.height / 2;
             this.ctx.translate(centerX, centerY);
             
-            // Draw a very strong background glow for maximum visibility
-            this.ctx.fillStyle = 'rgba(255, 60, 60, 0.35)';
-            this.ctx.shadowColor = 'rgba(255, 60, 60, 0.8)';
-            this.ctx.shadowBlur = 25;
-            this.ctx.beginPath();
-            this.ctx.arc(0, 0, enemy.width * 0.8, 0, Math.PI * 2);
-            this.ctx.fill();
+            // Reset shadows
+            this.ctx.shadowBlur = 0;
+            this.ctx.shadowColor = 'transparent';
             
-            // Add second glow layer for better contrast
-            this.ctx.fillStyle = 'rgba(255, 100, 100, 0.15)';
-            this.ctx.shadowBlur = 35;
-            this.ctx.beginPath();
-            this.ctx.arc(0, 0, enemy.width * 1.2, 0, Math.PI * 2);
-            this.ctx.fill();
-            
-            // Then draw the emoji on top with stronger outline for better visibility
             if (enemy.type === 'alien_basic') {
-                // Draw outline with enhanced visibility
-                this.ctx.strokeStyle = 'rgba(255, 255, 255, 1.0)';
-                this.ctx.lineWidth = 4;
-                this.ctx.shadowColor = '#ffffff';
-                this.ctx.shadowBlur = 6;
+                // Draw green/teal alien body (like screenshot)
+                this.ctx.fillStyle = '#40E0D0'; // Turquoise/Cyan body
                 this.ctx.beginPath();
-                this.ctx.arc(0, 0, enemy.width * 0.6, 0, Math.PI * 2);
+                this.ctx.ellipse(0, 0, enemy.width * 0.4, enemy.height * 0.3, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Dark green spots
+                this.ctx.fillStyle = '#2E8B57';
+                this.ctx.beginPath();
+                this.ctx.ellipse(-8, -5, 4, 3, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.ellipse(6, -3, 3, 2, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Eyes
+                this.ctx.fillStyle = '#000000';
+                this.ctx.beginPath();
+                this.ctx.ellipse(-6, -2, 2, 3, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.ellipse(6, -2, 2, 3, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // White outline for visibility
+                this.ctx.strokeStyle = '#FFFFFF';
+                this.ctx.lineWidth = 1;
+                this.ctx.beginPath();
+                this.ctx.ellipse(0, 0, enemy.width * 0.4, enemy.height * 0.3, 0, 0, Math.PI * 2);
                 this.ctx.stroke();
-                
-                // Basic alien with maximum size and clarity
-                this.ctx.shadowBlur = 18;
-                this.ctx.shadowColor = '#ffffff';
-                this.ctx.font = 'bold 48px Arial';  // Even larger size
-                this.ctx.textAlign = 'center';
-                this.ctx.textBaseline = 'middle';
-                this.ctx.fillStyle = '#ffffff';  // White text for better contrast
-                
-                // Draw emoji multiple times for maximum visibility
-                this.ctx.fillText('👽', 0, 0);
-                this.ctx.shadowBlur = 8;
-                this.ctx.fillText('👽', 0, 0);
                 
             } else if (enemy.type === 'alien_advanced') {
-                // Draw outline with enhanced visibility
-                this.ctx.strokeStyle = 'rgba(255, 255, 255, 1.0)';
-                this.ctx.lineWidth = 4;
-                this.ctx.shadowColor = '#ffffff';
-                this.ctx.shadowBlur = 6;
+                // Draw purple/pink alien (like screenshot)
+                this.ctx.fillStyle = '#9370DB'; // Medium slate blue/purple body
                 this.ctx.beginPath();
-                this.ctx.arc(0, 0, enemy.width * 0.6, 0, Math.PI * 2);
+                this.ctx.ellipse(0, 0, enemy.width * 0.35, enemy.height * 0.35, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Pink/magenta accents
+                this.ctx.fillStyle = '#FF69B4';
+                this.ctx.beginPath();
+                this.ctx.ellipse(0, -8, 8, 4, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Tentacles/appendages
+                this.ctx.fillStyle = '#8A2BE2';
+                this.ctx.fillRect(-12, 8, 4, 8);
+                this.ctx.fillRect(-4, 10, 4, 6);
+                this.ctx.fillRect(4, 10, 4, 6);
+                this.ctx.fillRect(8, 8, 4, 8);
+                
+                // Eyes
+                this.ctx.fillStyle = '#FF0000'; // Red eyes for advanced
+                this.ctx.beginPath();
+                this.ctx.ellipse(-5, -3, 2, 3, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.ellipse(5, -3, 2, 3, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // White outline for visibility
+                this.ctx.strokeStyle = '#FFFFFF';
+                this.ctx.lineWidth = 1;
+                this.ctx.beginPath();
+                this.ctx.ellipse(0, 0, enemy.width * 0.35, enemy.height * 0.35, 0, 0, Math.PI * 2);
                 this.ctx.stroke();
-                
-                // Advanced alien with maximum size and clarity
-                this.ctx.shadowBlur = 18;
-                this.ctx.shadowColor = '#ffffff';
-                this.ctx.font = 'bold 50px Arial';  // Even larger size
-                this.ctx.textAlign = 'center';
-                this.ctx.textBaseline = 'middle';
-                this.ctx.fillStyle = '#ffffff';  // White text for better contrast
-                
-                // Draw emoji multiple times for maximum visibility
-                this.ctx.fillText('👾', 0, 0);
-                this.ctx.shadowBlur = 8;
-                this.ctx.fillText('👾', 0, 0);
                 
             } else if (enemy.type === 'alien_boss') {
-                // Draw outline with maximum visibility for boss
-                this.ctx.strokeStyle = 'rgba(255, 255, 255, 1.0)';
-                this.ctx.lineWidth = 5;
-                this.ctx.shadowColor = '#ffff00';
-                this.ctx.shadowBlur = 10;
+                // Draw larger orange/yellow boss alien
+                this.ctx.fillStyle = '#FF8C00'; // Dark orange body
                 this.ctx.beginPath();
-                this.ctx.arc(0, 0, enemy.width * 0.7, 0, Math.PI * 2);
-                this.ctx.stroke();
+                this.ctx.ellipse(0, 0, enemy.width * 0.4, enemy.height * 0.3, 0, 0, Math.PI * 2);
+                this.ctx.fill();
                 
-                // Boss alien with maximum size and golden glow
-                this.ctx.shadowBlur = 25;
-                this.ctx.shadowColor = '#ffff00';
-                this.ctx.font = 'bold 55px Arial';  // Largest size for boss
-                this.ctx.textAlign = 'center';
-                this.ctx.textBaseline = 'middle';
-                this.ctx.fillStyle = '#ffffff';  // White text for better contrast
-                this.ctx.fillText('🛸', 0, 0);
-            } else {
-                // Fallback - ensure something is always visible
-                this.ctx.shadowBlur = 10;
-                this.ctx.shadowColor = '#ffffff';
-                this.ctx.font = 'bold 40px Arial';
-                this.ctx.textAlign = 'center';
-                this.ctx.textBaseline = 'middle';
-                this.ctx.fillStyle = '#ffffff';
-                this.ctx.fillText('👾', 0, 0);
+                // Yellow center
+                this.ctx.fillStyle = '#FFD700';
+                this.ctx.beginPath();
+                this.ctx.ellipse(0, 0, enemy.width * 0.25, enemy.height * 0.2, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Multiple eyes for boss
+                this.ctx.fillStyle = '#8B0000'; // Dark red eyes
+                this.ctx.beginPath();
+                this.ctx.ellipse(-8, -5, 2, 3, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.ellipse(0, -5, 2, 3, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.ellipse(8, -5, 2, 3, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Boss spikes/armor
+                this.ctx.fillStyle = '#B22222';
+                this.ctx.beginPath();
+                this.ctx.moveTo(-15, 0);
+                this.ctx.lineTo(-20, -5);
+                this.ctx.lineTo(-20, 5);
+                this.ctx.closePath();
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.moveTo(15, 0);
+                this.ctx.lineTo(20, -5);
+                this.ctx.lineTo(20, 5);
+                this.ctx.closePath();
+                this.ctx.fill();
+                
+                // White outline for visibility
+                this.ctx.strokeStyle = '#FFFFFF';
+                this.ctx.lineWidth = 2;
+                this.ctx.beginPath();
+                this.ctx.ellipse(0, 0, enemy.width * 0.4, enemy.height * 0.3, 0, 0, Math.PI * 2);
+                this.ctx.stroke();
             }
             
             this.ctx.restore();
@@ -1238,30 +1273,65 @@ class GameEngine {
             this.ctx.translate(centerX, centerY);
             this.ctx.rotate(obstacle.rotation);
             
+            // Reset shadows
+            this.ctx.shadowBlur = 0;
+            this.ctx.shadowColor = 'transparent';
+            
             if (obstacle.type === 'asteroid_small') {
-                // Small asteroid - clear emoji only
-                this.ctx.shadowBlur = 0;
-                this.ctx.font = 'bold 26px Arial';
-                this.ctx.textAlign = 'center';
-                this.ctx.textBaseline = 'middle';
-                this.ctx.fillText('🪨', 0, 0);
+                // Small rocky asteroid - brown/gray
+                this.ctx.fillStyle = '#8B7355'; // Brown/tan
+                this.ctx.beginPath();
+                this.ctx.ellipse(0, 0, obstacle.size * 0.3, obstacle.size * 0.25, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Dark spots
+                this.ctx.fillStyle = '#654321';
+                this.ctx.beginPath();
+                this.ctx.ellipse(-3, -2, 2, 2, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.ellipse(2, 1, 1.5, 1.5, 0, 0, Math.PI * 2);
+                this.ctx.fill();
                 
             } else if (obstacle.type === 'asteroid_large') {
-                // Large asteroid - clear emoji only
-                this.ctx.shadowBlur = 0;
-                this.ctx.font = 'bold 32px Arial';
-                this.ctx.textAlign = 'center';
-                this.ctx.textBaseline = 'middle';
-                this.ctx.fillText('☄️', 0, 0);
+                // Large space rock - darker gray
+                this.ctx.fillStyle = '#696969'; // Dim gray
+                this.ctx.beginPath();
+                this.ctx.ellipse(0, 0, obstacle.size * 0.4, obstacle.size * 0.35, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Craters/impact marks
+                this.ctx.fillStyle = '#2F4F4F'; // Dark slate gray
+                this.ctx.beginPath();
+                this.ctx.ellipse(-5, -3, 3, 2, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.ellipse(4, 2, 2, 2, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.ellipse(0, 5, 2.5, 1.5, 0, 0, Math.PI * 2);
+                this.ctx.fill();
                 
             } else {
-                // Default asteroid - clear emoji
-                this.ctx.shadowBlur = 0;
-                this.ctx.font = 'bold 28px Arial';
-                this.ctx.textAlign = 'center';
-                this.ctx.textBaseline = 'middle';
-                this.ctx.fillText('🌑', 0, 0);
+                // Default space debris - metallic
+                this.ctx.fillStyle = '#708090'; // Slate gray
+                this.ctx.beginPath();
+                this.ctx.ellipse(0, 0, obstacle.size * 0.35, obstacle.size * 0.3, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Metallic highlights
+                this.ctx.fillStyle = '#C0C0C0';
+                this.ctx.beginPath();
+                this.ctx.ellipse(-2, -2, 2, 1, 0, 0, Math.PI * 2);
+                this.ctx.fill();
             }
+            
+            // White outline for visibility
+            this.ctx.strokeStyle = '#FFFFFF';
+            this.ctx.lineWidth = 1;
+            this.ctx.beginPath();
+            this.ctx.ellipse(0, 0, obstacle.size * 0.4, obstacle.size * 0.35, 0, 0, Math.PI * 2);
+            this.ctx.stroke();
             
             this.ctx.restore();
         });
