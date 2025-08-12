@@ -434,6 +434,7 @@ body {
     height: auto;
     image-rendering: pixelated;
     box-sizing: border-box;
+    display: block; /* Ensure the canvas behaves as a block */
 }
 
 .game-controls {
@@ -755,27 +756,21 @@ body {
 
 /* Mobile Responsiveness - Enhanced */
 @media (max-width: 768px) {
-    /* Header adjustments */
     .game-header {
-        flex-direction: row; /* Change to row for better layout */
+        flex-direction: row;
         flex-wrap: wrap;
         padding: 10px;
         gap: 10px;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        background: rgba(10, 10, 15, 0.98); /* More opaque background */
-        border-bottom: 2px solid var(--primary-color);
+        height: auto;
     }
     
     .header-left {
-        width: 70%;
-        justify-content: flex-start;
+        width: 60%;
         order: 1;
     }
     
     .header-right {
-        width: 30%;
+        width: 40%;
         justify-content: flex-end;
         order: 2;
     }
@@ -783,49 +778,20 @@ body {
     .header-center {
         width: 100%;
         order: 3;
-        display: none; /* Hide daily challenge on mobile to save space */
     }
-    
-    .logo span {
-        font-size: 0.9rem;
-    }
-    
-    /* User info on mobile */
-    .user-info {
-        display: none; /* Hide on very small screens */
-    }
-    
-    #loginBtn, #logoutBtn {
-        padding: 6px 10px;
-        font-size: 0.8rem;
-        min-height: 35px;
-    }
-    
-    /* Only show login/logout on mobile */
-    .btn {
-        margin-left: auto;
-    }
-    
-    /* Game container mobile layout */
+
     .game-container {
+        display: flex;
         flex-direction: column;
-        padding: 8px;
-        gap: 10px;
-        max-width: 100%;
-        overflow: hidden;
+        gap: 15px;
+        padding: 10px;
     }
     
     .game-sidebar {
         width: 100%;
-        max-width: none;
-        overflow-x: auto;
-        padding: 10px 8px;
-        background: rgba(10, 10, 15, 0.6);
-        backdrop-filter: blur(5px);
-        border-radius: 8px;
-        border: 1px solid var(--border-color);
+        flex-direction: column;
     }
-    
+
     .game-sidebar.left {
         order: 2;
     }
@@ -833,57 +799,30 @@ body {
     .game-area {
         order: 1;
         width: 100%;
-        padding: 10px 8px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        margin-bottom: 10px;
+        padding: 0;
     }
     
     .game-sidebar.right {
         order: 3;
     }
     
-    /* Game canvas on mobile */
     #gameCanvas {
         max-width: 100%;
         height: auto;
-    }
-    
-    /* Mobile stat cards */
-    .game-sidebar .stat-card {
-        flex-direction: row;
-        align-items: center;
-        min-height: unset;
-        padding: 8px 12px;
-    }
-    
-    .stat-icon {
-        width: 30px;
-        height: 30px;
-        min-width: 30px;
-        font-size: 1rem;
-    }
-    
-    .leaderboard {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .leader-card {
-        padding: 10px 12px;
-    }
-    
-    /* Game controls on mobile */
-    .game-controls {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .control-btn {
         width: 100%;
-        justify-content: center;
-        padding: 12px;
+        margin: 0 auto;
+        display: block;
+    }
+    
+    .mission-info {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .game-controls {
+        margin-top: 15px;
+        margin-bottom: 80px; /* Space for mobile controls */
     }
 }
 
@@ -917,118 +856,79 @@ body {
 @media (max-width: 480px) {
     .game-header {
         padding: 8px;
-        position: sticky;
-        top: 0;
-        z-index: 200;
-        background: rgba(0, 0, 15, 0.95);
-        border-bottom: 2px solid var(--primary-color);
         height: auto;
     }
     
     .logo span {
-        font-size: 0.9rem;
-        letter-spacing: 0.5px;
-    }
-    
-    .logo i {
-        margin-right: 5px;
+        font-size: 0.8rem;
     }
     
     .game-container {
         padding: 8px;
-        gap: 12px;
+        gap: 10px;
     }
     
     .game-area {
-        padding: 5px;
-        margin-top: 5px;
-        margin-bottom: 5px;
+        padding: 0;
     }
     
     #gameCanvas {
-        min-height: 250px;
-        max-height: 50vh;
-        width: 100%;
-        box-shadow: 0 0 15px rgba(0, 200, 255, 0.15);
-        border: 1px solid rgba(0, 180, 255, 0.3);
         border-radius: 5px;
-        background: rgba(0, 0, 15, 0.5);
-    }
-    
-    .mission-info {
-        padding: 8px 5px;
-        margin-bottom: 5px;
-    }
-    
-    .mission-info h2 {
-        font-size: 1rem;
-        margin-bottom: 3px;
-    }
-    
-    .mission-info p {
-        font-size: 0.7rem;
-        opacity: 0.8;
-    }
-    
-    .game-sidebar {
-        margin-bottom: 8px;
-    }
-    
-    .game-sidebar.left {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 6px;
-        padding: 8px;
-    }
-    
-    .game-sidebar.left .sidebar-section {
+        min-height: 250px;
+        max-height: none;
         width: 100%;
-        margin-bottom: 5px;
+        height: auto;
     }
     
-    .game-sidebar.left .stat-card {
-        flex: 1 1 calc(33% - 6px);
-        min-width: 70px;
-        padding: 6px;
+    .touch-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
     }
     
-    .stat-label {
-        font-size: 0.6rem;
-        letter-spacing: 0.5px;
+    .fire-btn {
+        width: 60px;
+        height: 60px;
     }
     
-    .stat-value {
-        font-size: 0.9rem;
+    .fire-btn i {
+        font-size: 1.3rem;
+    }
+    
+    .game-controls {
+        margin-bottom: 100px; /* More space for mobile controls */
     }
     
     .control-btn {
-        padding: 10px 15px;
-        font-size: 0.8rem;
-        margin-bottom: 10px;
-    }
-    
-    .modal-content {
-        margin: 5% auto;
-        padding: 15px;
-        width: 95%;
-        box-shadow: 0 0 20px rgba(0, 150, 255, 0.3);
-    }
-    
-    .btn {
-        padding: 10px 15px;
+        padding: 8px 16px;
         font-size: 0.8rem;
     }
     
-    /* Show right sidebar (leaderboard) but with better styling */
-    .game-sidebar.right {
-        padding: 8px;
-        margin-bottom: 120px; /* Make space for mobile controls */
+    .stat-card {
+        padding: 8px 10px;
     }
     
-    .sidebar-section h3 {
+    .stat-icon {
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
         font-size: 0.9rem;
-        margin-bottom: 5px;
+    }
+    
+    .stat-value {
+        font-size: 1rem;
+    }
+    
+    .mission-info h2 {
+        font-size: 1.1rem;
+    }
+    
+    .mission-info p {
+        font-size: 0.8rem;
+    }
+    
+    .mobile-controls {
+        padding: 8px 10px 15px;
     }
 }
 
@@ -1039,7 +939,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 1000;
+    z-index: 100;
     width: 100%;
     justify-content: space-between;
     align-items: flex-end;
