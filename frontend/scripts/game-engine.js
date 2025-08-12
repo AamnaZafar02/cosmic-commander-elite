@@ -321,7 +321,7 @@ class GameEngine {
                 y: startY,
                 width: 6,
                 height: 20,
-                speed: 10,
+                speed: 15, // Faster double shot bullets
                 damage: 1,
                 type: 'double'
             });
@@ -331,7 +331,7 @@ class GameEngine {
                 y: startY,
                 width: 6,
                 height: 20,
-                speed: 10,
+                speed: 15, // Faster double shot bullets
                 damage: 1,
                 type: 'double'
             });
@@ -342,7 +342,7 @@ class GameEngine {
                 y: startY,
                 width: 6,
                 height: 18,
-                speed: 7, // Matched with enemy speed
+                speed: 12, // Much faster normal bullets
                 damage: 1,
                 type: 'normal'
             });
@@ -359,7 +359,7 @@ class GameEngine {
     }
 
     updateBullets(deltaTime) {
-        const speed = deltaTime * 0.15; // Fixed bullet speed for smooth movement
+        const speed = deltaTime * 0.25; // Faster bullet speed for better gameplay
         this.bullets = this.bullets.filter(bullet => {
             bullet.y -= bullet.speed * speed;
             return bullet.y > -bullet.height;
