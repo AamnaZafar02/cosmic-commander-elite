@@ -445,7 +445,7 @@ class GameEngine {
     }
 
     updatePowerups(deltaTime) {
-        const speed = deltaTime * 0.1; // Normalize speed
+        const speed = deltaTime * 0.15; // Match enemy speed (0.15)
         this.powerups.forEach(powerup => {
             powerup.y += powerup.speed * speed;
             powerup.rotation += 0.05 * deltaTime * 0.1;
@@ -625,7 +625,7 @@ class GameEngine {
                     x: Math.random() * (this.width - 30),
                     y: -30,
                     size: 25,
-                    speed: 2.5, // Fixed speed
+                    speed: 1.5, // Slower speed to match enemies
                     rotation: 0,
                     type: 'star',
                     collected: false,
@@ -637,7 +637,7 @@ class GameEngine {
                     x: Math.random() * (this.width - 25),
                     y: -25,
                     size: 20,
-                    speed: 2.5, // Fixed speed
+                    speed: 1.5, // Slower speed to match enemies
                     rotation: 0,
                     type: 'heart',
                     collected: false,
