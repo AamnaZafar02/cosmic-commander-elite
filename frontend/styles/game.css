@@ -1651,8 +1651,6 @@ body::before {
         width: 80px;
         height: 60px;
     }
-}
-    }
     
     .game-main {
         padding-bottom: 180px; /* Space for controls */
@@ -1662,24 +1660,24 @@ body::before {
     .game-controls {
         margin: 10px 0 180px 0;
     }
+}
+
+/* Improve game header on very small screens */
+@media (max-width: 400px) {
+    .logo i {
+        font-size: 1.2rem;
+    }
     
-    /* Improve game header on very small screens */
-    @media (max-width: 400px) {
-        .logo i {
-            font-size: 1.2rem;
-        }
-        
-        .logo span {
-            font-size: 0.8rem;
-        }
-        
-        #loginBtn, #logoutBtn {
-            padding: 5px 8px;
-            font-size: 0.7rem;
-        }
-        
-        .game-controls {
-            margin: 10px 0 180px 0;
-        }
+    .logo span {
+        font-size: 0.8rem;
+    }
+    
+    #loginBtn, #logoutBtn {
+        padding: 5px 8px;
+        font-size: 0.7rem;
+    }
+    
+    .game-controls {
+        margin: 10px 0 180px 0;
     }
 }
