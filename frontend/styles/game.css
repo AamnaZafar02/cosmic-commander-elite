@@ -803,74 +803,73 @@ body {
 @media (max-width: 768px) {
     /* Header adjustments */
     .game-header {
-        flex-direction: column;
+        flex-direction: row; /* Change to row for better layout */
+        flex-wrap: wrap;
         padding: 10px;
         gap: 10px;
         position: sticky;
         top: 0;
         z-index: 100;
-    }
-    
-    .header-left, .header-center, .header-right {
-        width: 100%;
+        background: rgba(10, 10, 15, 0.98); /* More opaque background */
+        border-bottom: 2px solid var(--primary-color);
     }
     
     .header-left {
-        justify-content: center;
+        width: 70%;
+        justify-content: flex-start;
+        order: 1;
+    }
+    
+    .header-right {
+        width: 30%;
+        justify-content: flex-end;
+        order: 2;
     }
     
     .header-center {
+        width: 100%;
         order: 3;
         display: none; /* Hide daily challenge on mobile to save space */
     }
     
-    .header-right {
-        order: 2;
-        justify-content: center;
-    }
-    
     .logo span {
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
     
     /* User info on mobile */
     .user-info {
-        gap: 8px;
-    }
-    
-    .user-avatar {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .user-details {
-        font-size: 0.8rem;
-    }
-    
-    .welcome-text {
-        font-size: 0.8rem;
-    }
-    
-    .user-rank {
-        font-size: 0.7rem;
+        display: none; /* Hide on very small screens */
     }
     
     #loginBtn, #logoutBtn {
         padding: 6px 10px;
         font-size: 0.8rem;
+        min-height: 35px;
+    }
+    
+    /* Only show login/logout on mobile */
+    .btn {
+        margin-left: auto;
     }
     
     /* Game container mobile layout */
     .game-container {
         flex-direction: column;
-        padding: 10px;
-        gap: 15px;
+        padding: 8px;
+        gap: 10px;
+        max-width: 100%;
+        overflow: hidden;
     }
     
     .game-sidebar {
         width: 100%;
         max-width: none;
         overflow-x: auto;
+        padding: 10px 8px;
+        background: rgba(10, 10, 15, 0.6);
+        backdrop-filter: blur(5px);
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
     }
     
     .game-sidebar.left {
@@ -880,7 +879,10 @@ body {
     .game-area {
         order: 1;
         width: 100%;
-        padding: 15px;
+        padding: 10px 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
     
     .game-sidebar.right {
@@ -925,9 +927,11 @@ body {
         width: 100%;
         height: auto;
         max-width: 100%;
-        max-height: 50vh;
-        min-height: 300px;
+        max-height: 60vh;
+        min-height: 320px;
         border-radius: 10px;
+        border: 2px solid var(--primary-color);
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
     }
     
     /* Mission info mobile */
@@ -1097,11 +1101,11 @@ body {
     }
 }
 
-/* Mobile Touch Controls */
+/* Mobile Touch Controls - Improved */
 .mobile-controls {
     display: none;
     position: fixed;
-    bottom: 10px;
+    bottom: 20px;
     left: 0;
     right: 0;
     z-index: 1000;
@@ -1109,15 +1113,17 @@ body {
     justify-content: space-between;
     align-items: flex-end;
     padding: 0 15px;
+    pointer-events: none; /* This ensures controls don't block canvas clicks */
 }
 
 .direction-pad {
     display: grid;
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 5px;
-    width: 130px;
-    height: 130px;
+    gap: 8px;
+    width: 150px;
+    height: 150px;
+    pointer-events: auto; /* Re-enable pointer events for control buttons */
 }
 
 .up-btn {
@@ -1141,36 +1147,37 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    pointer-events: auto; /* Re-enable pointer events for control buttons */
 }
 
 .touch-btn {
-    background: rgba(0, 212, 255, 0.5);
-    border: 2px solid var(--primary-color);
+    background: rgba(0, 212, 255, 0.7);
+    border: 3px solid var(--primary-color);
     color: var(--text-primary);
     border-radius: 50%;
-    width: 55px;
-    height: 55px;
+    width: 65px;
+    height: 65px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     cursor: pointer;
     transition: all 0.2s ease;
     backdrop-filter: blur(10px);
     user-select: none;
     touch-action: manipulation;
-    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
 }
 
 .fire-btn {
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    background: rgba(255, 170, 0, 0.5);
-    border-color: var(--accent-color);
-    font-size: 0.9rem;
+    background: rgba(255, 170, 0, 0.7);
+    border: 3px solid var(--accent-color);
+    font-size: 1rem;
     flex-direction: column;
-    box-shadow: 0 0 10px rgba(255, 170, 0, 0.3);
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.4);
 }
 
 .fire-btn i {
@@ -1204,13 +1211,39 @@ body {
     }
 }
 
-/* Also show on small screens */
+    /* Also show on small screens */
 @media (max-width: 768px) {
     .mobile-controls {
         display: flex !important;
+        bottom: 15px;
     }
     
     .game-main {
-        padding-bottom: 200px; /* Space for controls */
+        padding-bottom: 180px; /* Space for controls */
+    }
+    
+    /* Better game controls */
+    .game-controls {
+        margin: 10px 0 150px 0; /* More space for mobile controls */
+    }
+    
+    /* Improve game header on very small screens */
+    @media (max-width: 400px) {
+        .logo i {
+            font-size: 1.2rem;
+        }
+        
+        .logo span {
+            font-size: 0.8rem;
+        }
+        
+        #loginBtn, #logoutBtn {
+            padding: 5px 8px;
+            font-size: 0.7rem;
+        }
+        
+        .game-controls {
+            margin: 10px 0 180px 0;
+        }
     }
 }

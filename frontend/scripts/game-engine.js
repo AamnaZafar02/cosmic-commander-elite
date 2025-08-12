@@ -217,7 +217,7 @@ class GameEngine {
             y: this.height - 120,
             width: 50,
             height: 60,
-            speed: 7,
+            speed: 4.5, // Better balanced speed to match enemies
             health: 3,
             maxHealth: 3,
             lastShot: 0,
@@ -1056,10 +1056,10 @@ class GameEngine {
             const centerY = enemy.y + enemy.height / 2;
             this.ctx.translate(centerX, centerY);
             
-            // First draw a visible background shape for all enemy types
-            this.ctx.fillStyle = enemy.color || '#ff4444';
-            this.ctx.shadowColor = enemy.color || '#ff4444';
-            this.ctx.shadowBlur = 10;
+            // Draw a subtle background glow without red shadow
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            this.ctx.shadowColor = 'rgba(0, 212, 255, 0.3)';
+            this.ctx.shadowBlur = 5;
             this.ctx.beginPath();
             this.ctx.arc(0, 0, enemy.width * 0.4, 0, Math.PI * 2);
             this.ctx.fill();
