@@ -221,7 +221,7 @@ class GameEngine {
             health: 3,
             maxHealth: 3,
             lastShot: 0,
-            shootCooldown: 150,
+            shootCooldown: 100, // Faster shooting
             invulnerable: false,
             invulnerabilityTime: 0,
             thrustOffset: 0
@@ -377,7 +377,7 @@ class GameEngine {
                 y: startY,
                 width: 6,
                 height: 18,
-                speed: 12,
+                speed: 20, // Faster bullets
                 damage: 1,
                 type: 'normal'
             });
@@ -490,10 +490,10 @@ class GameEngine {
     
     spawnEnemies(deltaTime) {
         // ENEMY SPAWN SYSTEM
-        this.enemySpawnTimer += deltaTime * 3; // Triple speed for timer
+        this.enemySpawnTimer += deltaTime * 5; // Increase timer speed
         
         // Ensure enemies spawn by lowering the threshold
-        if (this.enemySpawnTimer > 800) { // Spawn every 0.8 seconds
+        if (this.enemySpawnTimer > 600) { // Spawn more frequently
             this.enemySpawnTimer = 0;
             
             const enemyType = Math.random();
@@ -515,7 +515,7 @@ class GameEngine {
                     height: 35,
                     speed: 3.5 + Math.random() * 2, // Fast: 3.5-5.5
                     health: 1,
-                    type: 'alien_scout',
+                    type: 'alien_basic', // Changed to match rendering types
                     shootTimer: 1500 + Math.random() * 1000,
                     color: '#ff4444'
                 };
@@ -528,7 +528,7 @@ class GameEngine {
                     height: 45,
                     speed: 2 + Math.random() * 1.5, // Medium: 2-3.5
                     health: 2,
-                    type: 'alien_fighter',
+                    type: 'alien_advanced', // Changed to match rendering types
                     shootTimer: 1000 + Math.random() * 1000,
                     color: '#ff6666'
                 };
@@ -541,7 +541,7 @@ class GameEngine {
                     height: 60,
                     speed: 1 + Math.random() * 1, // Slow: 1-2
                     health: 3,
-                    type: 'alien_destroyer',
+                    type: 'alien_boss', // Changed to match rendering types
                     shootTimer: 800 + Math.random() * 800,
                     color: '#ff8888'
                 };
@@ -968,9 +968,10 @@ class GameEngine {
 
         // Add rocket emoji (clear, no background)
         this.ctx.shadowBlur = 0;
-        this.ctx.font = 'bold 32px Arial';
+        this.ctx.font = 'bold 40px Arial'; // Increased size
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
+        this.ctx.fillStyle = '#ffffff'; // White for better contrast
         this.ctx.fillText('🚀', 0, -5);
 
         // Rocket nose cone
@@ -1049,29 +1050,49 @@ class GameEngine {
             const centerY = enemy.y + enemy.height / 2;
             this.ctx.translate(centerX, centerY);
             
+            // First draw a visible background shape for all enemy types
+            this.ctx.fillStyle = enemy.color || '#ff4444';
+            this.ctx.shadowColor = enemy.color || '#ff4444';
+            this.ctx.shadowBlur = 10;
+            this.ctx.beginPath();
+            this.ctx.arc(0, 0, enemy.width * 0.4, 0, Math.PI * 2);
+            this.ctx.fill();
+            
+            // Then draw the emoji on top for better visibility
             if (enemy.type === 'alien_basic') {
-                // Basic alien - simple design with clear emoji
+                // Basic alien - clear emoji
                 this.ctx.shadowBlur = 0;
-                this.ctx.font = 'bold 28px Arial';
+                this.ctx.font = 'bold 35px Arial';  // Increased size
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
+                this.ctx.fillStyle = '#ffffff';  // White text for better contrast
                 this.ctx.fillText('👽', 0, 0);
                 
             } else if (enemy.type === 'alien_advanced') {
                 // Advanced alien - clear emoji
                 this.ctx.shadowBlur = 0;
-                this.ctx.font = 'bold 30px Arial';
+                this.ctx.font = 'bold 38px Arial';  // Increased size
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
+                this.ctx.fillStyle = '#ffffff';  // White text for better contrast
                 this.ctx.fillText('👾', 0, 0);
                 
             } else if (enemy.type === 'alien_boss') {
                 // Boss alien - clear emoji
                 this.ctx.shadowBlur = 0;
-                this.ctx.font = 'bold 34px Arial';
+                this.ctx.font = 'bold 40px Arial';  // Increased size
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
+                this.ctx.fillStyle = '#ffffff';  // White text for better contrast
                 this.ctx.fillText('🛸', 0, 0);
+            } else {
+                // Fallback - ensure something is always visible
+                this.ctx.shadowBlur = 0;
+                this.ctx.font = 'bold 36px Arial';
+                this.ctx.textAlign = 'center';
+                this.ctx.textBaseline = 'middle';
+                this.ctx.fillStyle = '#ffffff';
+                this.ctx.fillText('👾', 0, 0);
             }
             
             this.ctx.restore();

@@ -74,10 +74,18 @@ class GameManager {
         this.resetGame();
         this.engine.start();
         
-        // FORCE ENEMIES TO SPAWN INITIALLY
-        for (let i = 0; i < 3; i++) {
+        // FORCE ENEMIES TO SPAWN INITIALLY - EXTREME SPAWNING
+        for (let i = 0; i < 15; i++) {
             this.engine.forceEnemySpawn();
         }
+        
+        // Setup continuous enemy spawning
+        this.enemySpawnInterval = setInterval(() => {
+            if (this.engine && this.engine.isRunning && !this.engine.isPaused) {
+                this.engine.forceEnemySpawn();
+                console.log("INTERVAL FORCE SPAWN");
+            }
+        }, 500); // Spawn faster
         
         this.startTime = Date.now();
         this.gameTime = 0;
@@ -129,9 +137,15 @@ class GameManager {
         this.engine = new GameEngine(document.getElementById('gameCanvas'));
         this.engine.initializePlayer();
         
-        // Clear timer
+        // Clear all timers
         if (this.gameTimer) {
             clearInterval(this.gameTimer);
+            this.gameTimer = null;
+        }
+        
+        if (this.enemySpawnInterval) {
+            clearInterval(this.enemySpawnInterval);
+            this.enemySpawnInterval = null;
         }
         
         // Hide game over screen
@@ -147,9 +161,15 @@ class GameManager {
         this.engine.stop();
         this.isGameOver = true;
         
-        // Clear timer
+        // Clear all timers
         if (this.gameTimer) {
             clearInterval(this.gameTimer);
+            this.gameTimer = null;
+        }
+        
+        if (this.enemySpawnInterval) {
+            clearInterval(this.enemySpawnInterval);
+            this.enemySpawnInterval = null;
         }
         
         // Calculate final stats

@@ -806,28 +806,57 @@ body {
         flex-direction: column;
         padding: 10px;
         gap: 10px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
     }
     
     .header-left, .header-center, .header-right {
         width: 100%;
+    }
+    
+    .header-left {
         justify-content: center;
     }
     
     .header-center {
         order: 3;
+        display: none; /* Hide daily challenge on mobile to save space */
     }
     
     .header-right {
         order: 2;
-        justify-content: space-between;
+        justify-content: center;
     }
     
     .logo span {
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
     
-    .daily-challenge {
-        padding: 10px;
+    /* User info on mobile */
+    .user-info {
+        gap: 8px;
+    }
+    
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .user-details {
+        font-size: 0.8rem;
+    }
+    
+    .welcome-text {
+        font-size: 0.8rem;
+    }
+    
+    .user-rank {
+        font-size: 0.7rem;
+    }
+    
+    #loginBtn, #logoutBtn {
+        padding: 6px 10px;
         font-size: 0.8rem;
     }
     
@@ -918,12 +947,20 @@ body {
     .game-controls {
         justify-content: center;
         gap: 15px;
-        margin-top: 15px;
+        margin: 10px 0 100px 0; /* Add bottom margin for mobile controls */
     }
     
     .control-btn {
         padding: 12px 20px;
         font-size: 0.9rem;
+        background: rgba(0, 212, 255, 0.3);
+        border: 2px solid var(--primary-color);
+        border-radius: 10px;
+        color: white;
+        font-weight: bold;
+        letter-spacing: 1px;
+        box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        min-width: 150px;
     }
     
     /* Leaderboard mobile */
@@ -1064,15 +1101,14 @@ body {
 .mobile-controls {
     display: none;
     position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 10px;
+    left: 0;
+    right: 0;
     z-index: 1000;
     width: 100%;
-    max-width: 500px;
     justify-content: space-between;
     align-items: flex-end;
-    padding: 0 20px;
+    padding: 0 15px;
 }
 
 .direction-pad {
@@ -1080,8 +1116,8 @@ body {
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 5px;
-    width: 150px;
-    height: 150px;
+    width: 130px;
+    height: 130px;
 }
 
 .up-btn {
@@ -1108,31 +1144,33 @@ body {
 }
 
 .touch-btn {
-    background: rgba(0, 212, 255, 0.2);
+    background: rgba(0, 212, 255, 0.5);
     border: 2px solid var(--primary-color);
     color: var(--text-primary);
     border-radius: 50%;
-    width: 45px;
-    height: 45px;
+    width: 55px;
+    height: 55px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     cursor: pointer;
     transition: all 0.2s ease;
     backdrop-filter: blur(10px);
     user-select: none;
     touch-action: manipulation;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
 }
 
 .fire-btn {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
-    background: rgba(255, 170, 0, 0.2);
+    background: rgba(255, 170, 0, 0.5);
     border-color: var(--accent-color);
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     flex-direction: column;
+    box-shadow: 0 0 10px rgba(255, 170, 0, 0.3);
 }
 
 .fire-btn i {
