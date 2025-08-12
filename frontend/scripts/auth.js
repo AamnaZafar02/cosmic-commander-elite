@@ -9,7 +9,7 @@ class AuthManager {
         this.user = JSON.parse(localStorage.getItem('user') || 'null');
         
         this.initializeEventListeners();
-        this.checkAuthStatus();
+        this.updateUI(); // Show user info instead of redirecting
     }
 
     initializeEventListeners() {
@@ -17,6 +17,14 @@ class AuthManager {
         document.getElementById('loginBtn').addEventListener('click', () => {
             this.showModal('loginModal');
         });
+
+        // Logout button
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                this.logout();
+            });
+        }
 
         // Hero login button
         const heroLoginBtn = document.getElementById('heroLoginBtn');
@@ -70,6 +78,80 @@ class AuthManager {
             // User is logged in, redirect to game
             window.location.href = '/game.html';
         }
+    }
+
+    updateUI() {
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userInfo = document.getElementById('userInfo');
+        const userName = document.getElementById('userName');
+        const userAvatar = document.getElementById('userAvatar');
+
+        if (this.token && this.user) {
+            // User is logged in
+            if (loginBtn) loginBtn.style.display = 'none';
+            if (logoutBtn) logoutBtn.style.display = 'block';
+            if (userInfo) userInfo.style.display = 'flex';
+            
+            if (userName) {
+                userName.textContent = this.user.username || 'Commander';
+            }
+            
+            if (userAvatar && this.user.profilePicture) {
+                userAvatar.src = this.user.profilePicture;
+                userAvatar.style.display = 'block';
+                document.getElementById('avatarIcon').style.display = 'none';
+            }
+        } else {
+            // User is not logged in - show guest player
+            if (loginBtn) loginBtn.style.display = 'block';
+            if (logoutBtn) logoutBtn.style.display = 'none';
+            if (userInfo) {
+                userInfo.style.display = 'flex';
+                // Show generated player name instead of hiding
+                if (userName) {
+                    userName.textContent = this.generatePlayerName();
+                }
+            }
+        }
+    }
+
+    // Generate a fun player name for guest users (same as game page)
+    generatePlayerName() {
+        const adjectives = [
+            'Cosmic', 'Stellar', 'Galactic', 'Nova', 'Quantum', 'Plasma', 
+            'Astro', 'Solar', 'Lunar', 'Meteor', 'Nebula', 'Orbital',
+            'Fusion', 'Photon', 'Laser', 'Cyber', 'Proto', 'Alpha'
+        ];
+        
+        const nouns = [
+            'Commander', 'Pilot', 'Ace', 'Captain', 'Admiral', 'Warrior',
+            'Hunter', 'Ranger', 'Scout', 'Guardian', 'Knight', 'Hero',
+            'Champion', 'Elite', 'Master', 'Legend', 'Phoenix', 'Storm'
+        ];
+        
+        // Get stored name or generate new one
+        let storedName = localStorage.getItem('guestPlayerName');
+        if (!storedName) {
+            const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+            const noun = nouns[Math.floor(Math.random() * nouns.length)];
+            const number = Math.floor(Math.random() * 999) + 1;
+            storedName = `${adjective} ${noun} ${number}`;
+            localStorage.setItem('guestPlayerName', storedName);
+        }
+        
+        return storedName;
+    }
+
+    logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('guestPlayerName'); // Clear generated guest name
+        this.token = null;
+        this.user = null;
+        
+        this.updateUI();
+        this.showSuccess('Logged out successfully. See you next time, Commander!');
     }
 
     showModal(modalId) {

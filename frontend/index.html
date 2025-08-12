@@ -24,6 +24,17 @@
                 </div>
             </a>
             <div class="header-actions">
+                <div class="user-info" id="userInfo">
+                    <div class="user-avatar">
+                        <img id="userAvatar" src="" alt="Commander" onerror="this.style.display='none'; document.getElementById('avatarIcon').style.display='block';">
+                        <i class="fas fa-user-astronaut" id="avatarIcon"></i>
+                    </div>
+                    <div class="user-details">
+                        <div class="welcome-text">Welcome, <span id="userName">Commander</span>!</div>
+                        <div class="user-rank">Recruit</div>
+                    </div>
+                </div>
+                <button class="btn btn-outline" id="logoutBtn" style="display: none;">LOGOUT</button>
                 <button class="btn btn-outline" id="loginBtn">LOGIN</button>
             </div>
         </div>

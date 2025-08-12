@@ -197,6 +197,72 @@ body {
     background: #357ae8;
 }
 
+/* User Info Section for Home Page */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(10, 10, 20, 0.8);
+    padding: 8px 16px;
+    border-radius: 15px;
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 212, 255, 0.1);
+    position: relative;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-avatar i {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.welcome-text {
+    font-size: 0.9rem;
+    color: #fff;
+    font-weight: 500;
+}
+
+.welcome-text span {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.user-rank {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
 /* Main Content */
 .main-content {
     padding: 60px 0;
