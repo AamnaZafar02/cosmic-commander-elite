@@ -73,6 +73,12 @@ class GameManager {
     startGame() {
         this.resetGame();
         this.engine.start();
+        
+        // FORCE ENEMIES TO SPAWN INITIALLY
+        for (let i = 0; i < 3; i++) {
+            this.engine.forceEnemySpawn();
+        }
+        
         this.startTime = Date.now();
         this.gameTime = 0;
         this.isGameOver = false;

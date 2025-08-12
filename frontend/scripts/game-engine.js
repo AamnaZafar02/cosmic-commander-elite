@@ -18,10 +18,10 @@ class GameEngine {
         // Game state
         this.isRunning = false;
         this.isPaused = false;
-        this.gameSpeed = 0.25; // ULTRA SLOW SPEED FOR MOBILE
+        this.gameSpeed = 0.6; // BALANCED SPEED - Not too slow, not too fast
         this.lastTime = 0;
         this.deltaTime = 0;
-        this.targetFPS = 30; // Reduced FPS for mobile
+        this.targetFPS = 60; // Back to normal FPS
         this.frameTime = 1000 / this.targetFPS;
         this.enemySpawnTimer = 0;
         this.obstacleSpawnTimer = 0;
@@ -319,7 +319,7 @@ class GameEngine {
         }
 
         // Apply movement with bounds checking and deltaTime
-        const moveSpeed = this.player.speed * (deltaTime * 0.03); // Ultra slow movement
+        const moveSpeed = this.player.speed * (deltaTime * 0.08); // Balanced movement speed
         this.player.x += moveX * moveSpeed;
         this.player.y += moveY * moveSpeed;
 
@@ -481,16 +481,29 @@ class GameEngine {
         });
     }
 
+    forceEnemySpawn() {
+        // Function to force enemy spawn - called at game start
+        const enemyType = Math.random();
+        this.createEnemy(enemyType);
+        console.log("FORCE SPAWNED ENEMY");
+    }
+    
     spawnEnemies(deltaTime) {
-        // FORCE ENEMY SPAWN
-        this.enemySpawnTimer += deltaTime * 2; // Double speed for timer
+        // ENEMY SPAWN SYSTEM
+        this.enemySpawnTimer += deltaTime * 3; // Triple speed for timer
         
         // Ensure enemies spawn by lowering the threshold
-        if (this.enemySpawnTimer > 1500) { // Spawn every 1.5 seconds
+        if (this.enemySpawnTimer > 800) { // Spawn every 0.8 seconds
             this.enemySpawnTimer = 0;
-            console.log("SPAWNING ENEMY");
             
             const enemyType = Math.random();
+            this.createEnemy(enemyType);
+            console.log("SPAWNING ENEMY");
+        }
+    }
+    
+    createEnemy(enemyType) {
+            // enemyType is passed from calling function
             let enemy;
             
             if (enemyType < 0.7) {
@@ -535,7 +548,6 @@ class GameEngine {
             }
             
             this.enemies.push(enemy);
-        }
     }
 
     spawnObstacles(deltaTime) {
