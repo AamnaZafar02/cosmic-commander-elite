@@ -28,8 +28,8 @@ class GameEngine {
         this.obstacleSpawnTimer = 0;
         this.powerupSpawnTimer = 0;
         
-        // Performance optimization
-        this.maxParticles = 150;
+        // Performance optimization for live servers
+        this.maxParticles = 50; // Reduced particle count for better performance
         this.cleanupTimer = 0;
         
         // Player power-ups
@@ -211,17 +211,17 @@ class GameEngine {
         this.deltaTime = currentTime - this.lastTime;
         this.lastTime = currentTime;
         
-        // Cap deltaTime for consistent speed - optimized for smooth gameplay
-        if (this.deltaTime > 33) this.deltaTime = 33; // Max 33ms (30 FPS minimum)
-        if (this.deltaTime < 12) this.deltaTime = 12; // Min 12ms (stable frame rate)
+        // Optimize deltaTime for better performance on live servers
+        if (this.deltaTime > 50) this.deltaTime = 16; // Cap at 16ms for 60 FPS
+        if (this.deltaTime < 8) this.deltaTime = 16; // Ensure consistent frame time
 
         if (!this.isPaused) {
-            // Apply balanced game speed for optimal performance
-            this.update(this.deltaTime * 0.85); // Slightly reduced for smoother movement
+            // Optimized game speed for live performance
+            this.update(this.deltaTime * 0.5); // Reduced multiplier for smoother performance
         }
         
-        // Use high-quality rendering for better visuals
-        this.ctx.imageSmoothingQuality = 'high';
+        // Use optimized rendering for better performance
+        this.ctx.imageSmoothingEnabled = false; // Disable smoothing for better performance
         this.render();
         
         // Use timeout with requestAnimationFrame to maintain steady frame rate
@@ -243,9 +243,9 @@ class GameEngine {
         this.spawnObstacles(deltaTime);
         this.spawnPowerups(deltaTime);
         
-        // Performance cleanup every 5 seconds
+        // Performance cleanup every 3 seconds (more frequent)
         this.cleanupTimer += deltaTime;
-        if (this.cleanupTimer > 5000) {
+        if (this.cleanupTimer > 3000) {
             this.cleanup();
             this.cleanupTimer = 0;
         }
@@ -455,11 +455,11 @@ class GameEngine {
     }
     
     spawnEnemies(deltaTime) {
-        // ENEMY SPAWN SYSTEM
-        this.enemySpawnTimer += deltaTime * 2; // Balanced timer speed
+        // OPTIMIZED ENEMY SPAWN SYSTEM for live performance
+        this.enemySpawnTimer += deltaTime * 1.5; // Reduced spawn frequency
         
-        // Only spawn if we don't already have too many enemies
-        if (this.enemySpawnTimer > 1500 && this.enemies.length < 8) { // More balanced spawn rate
+        // Limit enemy count for better performance
+        if (this.enemySpawnTimer > 2000 && this.enemies.length < 6) { // Reduced max enemies
             this.enemySpawnTimer = 0;
             
             const enemyType = Math.random();
@@ -540,50 +540,37 @@ class GameEngine {
     spawnObstacles(deltaTime) {
         this.obstacleSpawnTimer += deltaTime;
         
-        if (this.obstacleSpawnTimer > 3000) { // Spawn every 3 seconds
+        if (this.obstacleSpawnTimer > 4000) { // Reduced frequency for performance
             this.obstacleSpawnTimer = 0;
             
             const obstacleType = Math.random();
             let obstacle;
             
-            if (obstacleType < 0.6) {
-                // Small asteroid (60% chance) - Fast
-                const size = Math.random() * 25 + 35;
+            if (obstacleType < 0.8) {
+                // Small asteroid (80% chance) - Fast and simple
+                const size = Math.random() * 15 + 25; // Smaller for performance
                 obstacle = {
                     x: Math.random() * (this.width - size),
                     y: -size,
                     size: size,
-                    speed: 3 + Math.random() * 2, // Fast: 3-5
+                    speed: 2.5 + Math.random() * 1.5, // 2.5-4
                     rotation: 0,
-                    rotationSpeed: (Math.random() - 0.5) * 0.08,
+                    rotationSpeed: (Math.random() - 0.5) * 0.05,
                     type: 'asteroid_small',
-                    health: 2
-                };
-            } else if (obstacleType < 0.85) {
-                // Medium asteroid (25% chance) - Medium speed
-                const size = Math.random() * 20 + 50;
-                obstacle = {
-                    x: Math.random() * (this.width - size),
-                    y: -size,
-                    size: size,
-                    speed: 2 + Math.random() * 1.5, // Medium: 2-3.5
-                    rotation: 0,
-                    rotationSpeed: (Math.random() - 0.5) * 0.06,
-                    type: 'asteroid_medium',
-                    health: 3
+                    health: 1 // Reduced health for faster cleanup
                 };
             } else {
-                // Large asteroid (15% chance) - Slow but dangerous
-                const size = Math.random() * 30 + 70;
+                // Medium asteroid (20% chance) - Reduced from 3 types to 2
+                const size = Math.random() * 15 + 40;
                 obstacle = {
                     x: Math.random() * (this.width - size),
                     y: -size,
                     size: size,
-                    speed: 1 + Math.random() * 1, // Slow: 1-2
+                    speed: 1.5 + Math.random() * 1, // 1.5-2.5
                     rotation: 0,
                     rotationSpeed: (Math.random() - 0.5) * 0.04,
-                    type: 'asteroid_large',
-                    health: 5
+                    type: 'asteroid_medium',
+                    health: 2
                 };
             }
             
@@ -594,7 +581,7 @@ class GameEngine {
     spawnPowerups(deltaTime) {
         this.powerupSpawnTimer += deltaTime;
         
-        if (this.powerupSpawnTimer > 8000) { // Spawn every 8 seconds (more frequent)
+        if (this.powerupSpawnTimer > 10000) { // Slightly less frequent for performance
             this.powerupSpawnTimer = 0;
             
             const powerupType = Math.random();
@@ -1125,111 +1112,31 @@ class GameEngine {
                 enemy.rotation += enemy.rotationSpeed || 0.02;
             }
             
-            // Reset shadows
+            // Clear enemy rendering with emojis (like localhost)
             this.ctx.shadowBlur = 0;
             this.ctx.shadowColor = 'transparent';
+            this.ctx.textAlign = 'center';
+            this.ctx.textBaseline = 'middle';
             
             if (enemy.type === 'alien_small') {
-                // Small green alien - compact design
-                this.ctx.fillStyle = '#32CD32'; // Lime green body
-                this.ctx.beginPath();
-                this.ctx.ellipse(0, 0, enemy.width * 0.4, enemy.height * 0.35, 0, 0, Math.PI * 2);
-                this.ctx.fill();
-                
-                // Dark spots
-                this.ctx.fillStyle = '#228B22';
-                this.ctx.beginPath();
-                this.ctx.ellipse(-4, -2, 2, 1.5, 0, 0, Math.PI * 2);
-                this.ctx.fill();
-                this.ctx.beginPath();
-                this.ctx.ellipse(3, -1, 1.5, 1, 0, 0, Math.PI * 2);
-                this.ctx.fill();
-                
-                // Small eyes
-                this.ctx.fillStyle = '#000000';
-                this.ctx.beginPath();
-                this.ctx.ellipse(-3, -1, 1, 1.5, 0, 0, Math.PI * 2);
-                this.ctx.fill();
-                this.ctx.beginPath();
-                this.ctx.ellipse(3, -1, 1, 1.5, 0, 0, Math.PI * 2);
-                this.ctx.fill();
+                // Small alien emoji - clear and visible
+                this.ctx.font = `bold ${enemy.width + 8}px Arial`;
+                this.ctx.fillText('👽', 0, 0);
                 
             } else if (enemy.type === 'spawn_enemy') {
-                // Spawn enemy - yellowish brown
-                this.ctx.fillStyle = '#DAA520'; // Golden rod body
-                this.ctx.beginPath();
-                this.ctx.ellipse(0, 0, enemy.width * 0.4, enemy.height * 0.4, 0, 0, Math.PI * 2);
-                this.ctx.fill();
-                
-                // Spawn pattern
-                this.ctx.fillStyle = '#B8860B';
-                this.ctx.beginPath();
-                this.ctx.ellipse(0, -3, 6, 3, 0, 0, Math.PI * 2);
-                this.ctx.fill();
-                
-                // Segmented body
-                this.ctx.strokeStyle = '#8B4513';
-                this.ctx.lineWidth = 1;
-                this.ctx.beginPath();
-                this.ctx.arc(0, -6, 3, 0, Math.PI * 2);
-                this.ctx.stroke();
-                this.ctx.beginPath();
-                this.ctx.arc(0, 0, 4, 0, Math.PI * 2);
-                this.ctx.stroke();
-                this.ctx.beginPath();
-                this.ctx.arc(0, 6, 3, 0, Math.PI * 2);
-                this.ctx.stroke();
+                // Spawn enemy emoji - clear spawn creature
+                this.ctx.font = `bold ${enemy.width + 5}px Arial`;
+                this.ctx.fillText('🦠', 0, 0); // Microbe/spawn emoji
                 
             } else if (enemy.type === 'obstacle_enemy') {
-                // Obstacle enemy - asteroid-like
-                this.ctx.fillStyle = '#696969'; // Dim gray body
-                this.ctx.beginPath();
-                
-                // Draw irregular asteroid shape
-                const points = 8;
-                const radius = enemy.width * 0.4;
-                this.ctx.moveTo(radius, 0);
-                for (let i = 1; i <= points; i++) {
-                    const angle = (i * Math.PI * 2) / points;
-                    const r = radius * (0.8 + Math.random() * 0.4);
-                    this.ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
-                }
-                this.ctx.closePath();
-                this.ctx.fill();
-                
-                // Rock texture
-                this.ctx.fillStyle = '#2F4F4F';
-                this.ctx.beginPath();
-                this.ctx.ellipse(-4, -3, 2, 1, 0, 0, Math.PI * 2);
-                this.ctx.fill();
-                this.ctx.beginPath();
-                this.ctx.ellipse(3, 2, 1.5, 1.5, 0, 0, Math.PI * 2);
-                this.ctx.fill();
+                // Obstacle enemy - asteroid emoji
+                this.ctx.font = `bold ${enemy.width + 3}px Arial`;
+                this.ctx.fillText('☄️', 0, 0); // Comet/asteroid emoji
                 
             } else if (enemy.type === 'alien_advanced') {
-                // Advanced alien - purple/blue
-                this.ctx.fillStyle = '#9370DB'; // Medium slate blue body
-                this.ctx.beginPath();
-                this.ctx.ellipse(0, 0, enemy.width * 0.4, enemy.height * 0.4, 0, 0, Math.PI * 2);
-                this.ctx.fill();
-                
-                // Advanced features
-                this.ctx.fillStyle = '#4169E1';
-                this.ctx.beginPath();
-                this.ctx.ellipse(0, -4, 8, 3, 0, 0, Math.PI * 2);
-                this.ctx.fill();
-                
-                // Multiple eyes
-                this.ctx.fillStyle = '#FF0000';
-                this.ctx.beginPath();
-                this.ctx.ellipse(-5, -2, 1.5, 2, 0, 0, Math.PI * 2);
-                this.ctx.fill();
-                this.ctx.beginPath();
-                this.ctx.ellipse(0, -3, 1.5, 2, 0, 0, Math.PI * 2);
-                this.ctx.fill();
-                this.ctx.beginPath();
-                this.ctx.ellipse(5, -2, 1.5, 2, 0, 0, Math.PI * 2);
-                this.ctx.fill();
+                // Advanced alien emoji - different alien type
+                this.ctx.font = `bold ${enemy.width + 10}px Arial`;
+                this.ctx.fillText('👾', 0, 0); // Space invader emoji
             }
             
             this.ctx.restore();
