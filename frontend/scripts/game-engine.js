@@ -532,16 +532,16 @@ class GameEngine {
                     color: '#ff4444'
                 };
             } else if (enemyType < 0.75) {
-                // Spawn Enemy (25% chance) - Medium size
+                // Spawn Enemy (25% chance) - Medium size, FASTER speed
                 enemy = {
                     x: xPosition,
                     y: -35,
                     width: 30, // Smaller size
                     height: 25,
-                    speed: 1.5 + Math.random() * 1, // 1.5-2.5 speed
+                    speed: 3 + Math.random() * 1.5, // 3-4.5 speed (MUCH FASTER)
                     health: 1,
                     type: 'spawn_enemy',
-                    shootTimer: 2500 + Math.random() * 2000,
+                    shootTimer: 2000 + Math.random() * 1500, // Faster shooting
                     color: '#ff6666'
                 };
             } else if (enemyType < 0.9) {
@@ -660,13 +660,19 @@ class GameEngine {
     }
 
     checkCollisions() {
-        // Bullet vs Enemy collisions
-        this.bullets.forEach((bullet, bulletIndex) => {
-            this.enemies.forEach((enemy, enemyIndex) => {
+        // Bullet vs Enemy collisions - improved detection
+        for (let bulletIndex = this.bullets.length - 1; bulletIndex >= 0; bulletIndex--) {
+            const bullet = this.bullets[bulletIndex];
+            let bulletHit = false;
+            
+            for (let enemyIndex = this.enemies.length - 1; enemyIndex >= 0; enemyIndex--) {
+                const enemy = this.enemies[enemyIndex];
+                
                 if (this.isColliding(bullet, enemy)) {
                     // Remove bullet and damage enemy
                     this.bullets.splice(bulletIndex, 1);
                     enemy.health--;
+                    bulletHit = true;
                     
                     // Create hit particles
                     this.createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, 6, '#ffaa00', 'medium');
@@ -685,9 +691,12 @@ class GameEngine {
                             window.gameManager.aliensDefeated++;
                         }
                     }
+                    break; // Exit enemy loop since bullet hit
                 }
-            });
-        });
+            }
+            
+            if (bulletHit) continue; // Skip to next bullet
+        }
 
         // Bullet vs Obstacle collisions
         this.bullets.forEach((bullet, bulletIndex) => {
@@ -806,10 +815,12 @@ class GameEngine {
     }
 
     isColliding(rect1, rect2) {
-        return rect1.x < rect2.x + rect2.width &&
-               rect1.x + rect1.width > rect2.x &&
-               rect1.y < rect2.y + rect2.height &&
-               rect1.y + rect1.height > rect2.y;
+        // More precise collision detection with slight padding reduction for better hit detection
+        const padding = 2; // Small padding to ensure hits register properly
+        return rect1.x + padding < rect2.x + rect2.width - padding &&
+               rect1.x + rect1.width - padding > rect2.x + padding &&
+               rect1.y + padding < rect2.y + rect2.height - padding &&
+               rect1.y + rect1.height - padding > rect2.y + padding;
     }
 
     damagePlayer() {
@@ -1159,23 +1170,35 @@ class GameEngine {
             this.ctx.textBaseline = 'middle';
             
             if (enemy.type === 'alien_small') {
-                // Small alien emoji - clear and visible
-                this.ctx.font = `bold ${enemy.width + 8}px Arial`;
+                // Small alien emoji - clear and visible with outline
+                this.ctx.font = `bold ${enemy.width + 10}px Arial`; // Larger font
+                this.ctx.strokeStyle = '#ffffff';
+                this.ctx.lineWidth = 1;
+                this.ctx.strokeText('👽', 0, 0); // Add white outline for contrast
                 this.ctx.fillText('👽', 0, 0);
                 
             } else if (enemy.type === 'spawn_enemy') {
-                // Spawn enemy emoji - clear spawn creature
-                this.ctx.font = `bold ${enemy.width + 5}px Arial`;
-                this.ctx.fillText('🦠', 0, 0); // Microbe/spawn emoji
+                // Spawn enemy emoji - clear spawn creature with better visibility
+                this.ctx.font = `bold ${enemy.width + 10}px Arial`; // Larger font
+                this.ctx.strokeStyle = '#ffffff';
+                this.ctx.lineWidth = 1;
+                this.ctx.strokeText('👾', 0, 0); // Add white outline for contrast
+                this.ctx.fillText('👾', 0, 0); // Space invader emoji (more visible than 🦠)
                 
             } else if (enemy.type === 'obstacle_enemy') {
-                // Obstacle enemy - asteroid emoji
-                this.ctx.font = `bold ${enemy.width + 3}px Arial`;
+                // Obstacle enemy - asteroid emoji with outline
+                this.ctx.font = `bold ${enemy.width + 8}px Arial`;
+                this.ctx.strokeStyle = '#ffffff';
+                this.ctx.lineWidth = 1;
+                this.ctx.strokeText('☄️', 0, 0);
                 this.ctx.fillText('☄️', 0, 0); // Comet/asteroid emoji
                 
             } else if (enemy.type === 'alien_advanced') {
-                // Advanced alien emoji - different alien type
-                this.ctx.font = `bold ${enemy.width + 10}px Arial`;
+                // Advanced alien emoji - different alien type with outline
+                this.ctx.font = `bold ${enemy.width + 12}px Arial`; // Larger font
+                this.ctx.strokeStyle = '#ffffff';
+                this.ctx.lineWidth = 1;
+                this.ctx.strokeText('👾', 0, 0);
                 this.ctx.fillText('👾', 0, 0); // Space invader emoji
             }
             

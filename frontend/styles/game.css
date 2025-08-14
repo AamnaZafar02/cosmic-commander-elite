@@ -630,6 +630,28 @@ body::before {
     font-size: 1.1rem;
 }
 
+/* Pause Button Specific Styling */
+#pauseBtn {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24) !important;
+    border: 2px solid #ff4757 !important;
+    color: white !important;
+    font-weight: bold !important;
+    display: none; /* Hidden by default, shown via JavaScript */
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3) !important;
+}
+
+#pauseBtn:hover {
+    background: linear-gradient(135deg, #ee5a24, #ff6b6b) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4) !important;
+}
+
+/* Ensure pause button shows when game is running */
+#pauseBtn:not([style*="display: none"]) {
+    display: flex !important;
+}
+}
+
 .control-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 212, 255, 0.5);
