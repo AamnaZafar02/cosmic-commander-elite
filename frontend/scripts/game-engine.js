@@ -1185,12 +1185,30 @@ class GameEngine {
             this.ctx.textBaseline = 'middle';
             
             if (enemy.type === 'alien_small') {
-                // Small alien emoji - clear and visible with outline
-                this.ctx.font = `bold ${enemy.width + 10}px Arial`; // Larger font
+                // Small alien - custom drawn green alien (NO EMOJIS)
+                this.ctx.fillStyle = '#33ff33';
                 this.ctx.strokeStyle = '#ffffff';
-                this.ctx.lineWidth = 1;
-                this.ctx.strokeText('👽', 0, 0); // Add white outline for contrast
-                this.ctx.fillText('👽', 0, 0);
+                this.ctx.lineWidth = 2;
+                
+                // Main alien head (oval)
+                this.ctx.beginPath();
+                this.ctx.ellipse(0, -3, enemy.width/2.5, enemy.width/3, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.stroke();
+                
+                // Large black eyes
+                this.ctx.fillStyle = '#000000';
+                this.ctx.beginPath();
+                this.ctx.ellipse(-6, -3, 4, 6, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.ellipse(6, -3, 4, 6, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Small mouth
+                this.ctx.beginPath();
+                this.ctx.ellipse(0, 5, 2, 1, 0, 0, Math.PI * 2);
+                this.ctx.fill();
                 
             } else if (enemy.type === 'alien_fast') {
                 // Fast alien emoji - same as small alien but different color effect
@@ -1201,12 +1219,28 @@ class GameEngine {
                 this.ctx.fillText('�', 0, 0);
                 
             } else if (enemy.type === 'obstacle_enemy') {
-                // Obstacle enemy - asteroid emoji with outline
-                this.ctx.font = `bold ${enemy.width + 8}px Arial`;
+                // Obstacle enemy - custom drawn asteroid (NO EMOJIS)
+                this.ctx.fillStyle = '#d0a060';
                 this.ctx.strokeStyle = '#ffffff';
-                this.ctx.lineWidth = 1;
-                this.ctx.strokeText('☄️', 0, 0);
-                this.ctx.fillText('☄️', 0, 0); // Comet/asteroid emoji
+                this.ctx.lineWidth = 2;
+                
+                // Main asteroid body (irregular circle)
+                this.ctx.beginPath();
+                this.ctx.arc(0, 0, enemy.width/2.2, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.stroke();
+                
+                // Crater details (darker brown)
+                this.ctx.fillStyle = '#8b6914';
+                this.ctx.beginPath();
+                this.ctx.arc(-4, -2, 2, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.arc(3, 3, 1.5, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.arc(0, -5, 1, 0, Math.PI * 2);
+                this.ctx.fill();
             }
             
             this.ctx.restore();
