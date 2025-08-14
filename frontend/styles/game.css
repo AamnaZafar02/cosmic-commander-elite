@@ -1583,10 +1583,6 @@ body::before {
     box-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
     border-color: rgba(0, 255, 255, 1);
 }
-        0 4px 15px rgba(255, 68, 68, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2),
-        0 0 25px rgba(255, 68, 68, 0.5);
-}
 
 /* Cosmic glow effect for buttons */
 .touch-btn::before {
