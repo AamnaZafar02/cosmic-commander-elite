@@ -1,5 +1,6 @@
-// Enhanced Emoji Fix for Game Engine v1.0.0
+// Enhanced Emoji Fix for Game Engine v1.0.3
 // This file contains the corrected emoji rendering with multiple fallback methods
+// UPDATED: More robust emoji rendering with enhanced visibility
 
 function renderEnemiesFixed(ctx, enemies) {
     enemies.forEach(enemy => {

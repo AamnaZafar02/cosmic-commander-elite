@@ -1,3 +1,9 @@
+html {
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap');
 
 :root {
@@ -32,6 +38,8 @@ body {
     min-height: 100vh;
     box-sizing: border-box;
     position: relative;
+    height: 100%; /* Ensure full height */
+    width: 100%; /* Ensure full width */
 }
 
 /* Enhanced cosmic background effect */
@@ -113,18 +121,20 @@ body::before {
     align-items: center;
     padding: 15px 20px;
     background: 
-        linear-gradient(135deg, rgba(18, 20, 41, 0.95) 0%, rgba(25, 30, 55, 0.95) 50%, rgba(18, 20, 41, 0.95) 100%);
+        linear-gradient(135deg, rgba(18, 20, 41, 0.99) 0%, rgba(25, 30, 55, 0.99) 50%, rgba(18, 20, 41, 0.99) 100%);
+    -webkit-backdrop-filter: blur(15px);
     backdrop-filter: blur(15px);
-    border-bottom: 2px solid rgba(0, 212, 255, 0.4);
-    border-image: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.6), transparent) 1;
+    border-bottom: 3px solid rgba(0, 212, 255, 0.6);
+    border-image: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.8), transparent) 1;
     height: var(--header-height);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.8);
     position: fixed; /* Fixed position to prevent scrolling movement */
     top: 0;
     left: 0;
     right: 0;
     width: 100%; /* Ensure full width */
-    z-index: 1000; /* High z-index to stay on top */
+    z-index: 9999; /* Extremely high z-index to ensure it stays on top */
+    z-index: 9999; /* Very high z-index to guarantee it stays on top */
 }
 
 

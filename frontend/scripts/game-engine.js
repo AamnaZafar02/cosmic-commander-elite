@@ -648,7 +648,7 @@ class GameEngine {
     }
 
     checkCollisions() {
-        // Bullet vs Enemy collisions - improved detection
+        // Bullet vs Enemy collisions - MUCH IMPROVED detection for easier hits
         for (let bulletIndex = this.bullets.length - 1; bulletIndex >= 0; bulletIndex--) {
             const bullet = this.bullets[bulletIndex];
             let bulletHit = false;
@@ -656,7 +656,14 @@ class GameEngine {
             for (let enemyIndex = this.enemies.length - 1; enemyIndex >= 0; enemyIndex--) {
                 const enemy = this.enemies[enemyIndex];
                 
-                if (this.isColliding(bullet, enemy)) {
+        // Create expanded hit area for enemies
+        const expandedEnemy = {
+            x: enemy.x - 20, // Expand left (was 15)
+            y: enemy.y - 20, // Expand top (was 15)
+            width: enemy.width + 40, // Expand width (was 30)
+            height: enemy.height + 40 // Expand height (was 30)
+        };                // Use expanded area for collision check - much more forgiving
+                if (this.isColliding(bullet, expandedEnemy)) {
                     // Remove bullet and damage enemy
                     this.bullets.splice(bulletIndex, 1);
                     enemy.health--;
@@ -686,17 +693,23 @@ class GameEngine {
             if (bulletHit) continue; // Skip to next bullet
         }
 
-        // Bullet vs Obstacle collisions
-        this.bullets.forEach((bullet, bulletIndex) => {
-            this.obstacles.forEach((obstacle, obstacleIndex) => {
-                const obstacleRect = {
-                    x: obstacle.x,
-                    y: obstacle.y,
-                    width: obstacle.size,
-                    height: obstacle.size
+        // Bullet vs Obstacle collisions - IMPROVED with expanded hit areas
+        for (let bulletIndex = this.bullets.length - 1; bulletIndex >= 0; bulletIndex--) {
+            const bullet = this.bullets[bulletIndex];
+            
+            for (let obstacleIndex = this.obstacles.length - 1; obstacleIndex >= 0; obstacleIndex--) {
+                const obstacle = this.obstacles[obstacleIndex];
+                
+                // Create expanded hit area for obstacles
+                const expandedObstacle = {
+                    x: obstacle.x - 20, // Expand left (was 15)
+                    y: obstacle.y - 20, // Expand top (was 15)
+                    width: obstacle.size + 40, // Expand width (was 30)
+                    height: obstacle.size + 40 // Expand height (was 30)
                 };
                 
-                if (this.isColliding(bullet, obstacleRect)) {
+                // Check collision with expanded area - much more forgiving
+                if (this.isColliding(bullet, expandedObstacle)) {
                     this.bullets.splice(bulletIndex, 1);
                     obstacle.health--;
                     
@@ -712,9 +725,10 @@ class GameEngine {
                             window.gameManager.addScore(5); // All obstacles give 5 points
                         }
                     }
+                    break; // Exit obstacle loop since bullet hit
                 }
-            });
-        });
+            }
+        }
 
         // Player vs Enemy collisions
         if (this.player && !this.player.invulnerable) {
@@ -803,12 +817,22 @@ class GameEngine {
     }
 
     isColliding(rect1, rect2) {
-        // More precise collision detection with slight padding reduction for better hit detection
-        const padding = 2; // Small padding to ensure hits register properly
-        return rect1.x + padding < rect2.x + rect2.width - padding &&
-               rect1.x + rect1.width - padding > rect2.x + padding &&
-               rect1.y + padding < rect2.y + rect2.height - padding &&
-               rect1.y + rect1.height - padding > rect2.y + padding;
+        // IMPROVED collision detection with larger hit area for easier hits
+        // This makes the game more forgiving for hits, so bullets that are close to enemies will register
+        const padding = 20; // INCREASED padding for MUCH easier hit detection (was 15)
+        
+        // Expand the hit area for enemies and obstacles
+        const expandedRect2 = {
+            x: rect2.x - padding,
+            y: rect2.y - padding,
+            width: rect2.width + (padding * 2),
+            height: rect2.height + (padding * 2)
+        };
+        
+        return rect1.x < expandedRect2.x + expandedRect2.width &&
+               rect1.x + rect1.width > expandedRect2.x &&
+               rect1.y < expandedRect2.y + expandedRect2.height &&
+               rect1.y + rect1.height > expandedRect2.y;
     }
 
     damagePlayer() {
