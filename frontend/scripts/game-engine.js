@@ -146,30 +146,68 @@ class GameEngine {
     }
 
     initializeMobileControls() {
-        // Mobile touch buttons (LEFT, RIGHT, FIRE only)
-        const leftBtn = document.getElementById('leftBtn');
-        const rightBtn = document.getElementById('rightBtn');
+        // Mobile touch buttons (2-button system: MOVE and FIRE)
+        const moveBtn = document.getElementById('moveBtn');
         const fireBtn = document.getElementById('fireBtn');
+        
+        // Touch state for movement direction
+        this.moveDirection = 0; // -1 for left, 1 for right, 0 for none
+        this.lastMoveTime = 0;
 
-        if (leftBtn) {
-            leftBtn.addEventListener('touchstart', (e) => {
+        if (moveBtn) {
+            let moveStartX = 0;
+            
+            moveBtn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
-                this.touchControls.left = true;
+                moveStartX = e.touches[0].clientX;
+                this.touchControls.moving = true;
             });
-            leftBtn.addEventListener('touchend', (e) => {
+            
+            moveBtn.addEventListener('touchmove', (e) => {
                 e.preventDefault();
+                if (this.touchControls.moving) {
+                    const currentX = e.touches[0].clientX;
+                    const deltaX = currentX - moveStartX;
+                    
+                    // Determine movement direction based on swipe
+                    if (Math.abs(deltaX) > 20) { // Minimum swipe distance
+                        if (deltaX > 0) {
+                            this.touchControls.left = false;
+                            this.touchControls.right = true;
+                        } else {
+                            this.touchControls.left = true;
+                            this.touchControls.right = false;
+                        }
+                    }
+                }
+            });
+            
+            moveBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.touchControls.moving = false;
                 this.touchControls.left = false;
-            });
-        }
-
-        if (rightBtn) {
-            rightBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                this.touchControls.right = true;
-            });
-            rightBtn.addEventListener('touchend', (e) => {
-                e.preventDefault();
                 this.touchControls.right = false;
+            });
+            
+            // Alternative tap-based movement for easier use
+            moveBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const currentTime = Date.now();
+                
+                // Toggle between left and right movement on tap
+                if (currentTime - this.lastMoveTime > 300) {
+                    this.moveDirection = this.moveDirection === 1 ? -1 : 1;
+                    this.lastMoveTime = currentTime;
+                    
+                    // Apply movement for a short duration
+                    if (this.moveDirection === 1) {
+                        this.touchControls.right = true;
+                        setTimeout(() => { this.touchControls.right = false; }, 200);
+                    } else {
+                        this.touchControls.left = true;
+                        setTimeout(() => { this.touchControls.left = false; }, 200);
+                    }
+                }
             });
         }
 
@@ -211,20 +249,13 @@ class GameEngine {
         this.deltaTime = currentTime - this.lastTime;
         this.lastTime = currentTime;
         
-        // Improved deltaTime for smoother movement on live servers
-        if (this.deltaTime > 40) this.deltaTime = 16; // Cap at reasonable time
-        if (this.deltaTime < 8) this.deltaTime = 16; // Consistent frame time
-        
-        // Smooth deltaTime averaging for consistent movement
-        if (!this.lastDeltaTimes) this.lastDeltaTimes = [];
-        this.lastDeltaTimes.push(this.deltaTime);
-        if (this.lastDeltaTimes.length > 3) this.lastDeltaTimes.shift();
-        
-        const avgDeltaTime = this.lastDeltaTimes.reduce((sum, dt) => sum + dt, 0) / this.lastDeltaTimes.length;
+        // Simplified deltaTime for better live performance
+        if (this.deltaTime > 50) this.deltaTime = 16; // Cap at reasonable time
+        if (this.deltaTime < 5) this.deltaTime = 16; // Consistent frame time
 
         if (!this.isPaused) {
-            // Use averaged deltaTime for smoother movement
-            this.update(avgDeltaTime * 1.0); // Normal speed multiplier
+            // Simplified update for better performance
+            this.update(this.deltaTime * 1.2); // Slightly faster multiplier
         }
         
         // Enable smoothing for better visuals
@@ -382,7 +413,7 @@ class GameEngine {
     }
 
     updateEnemies(deltaTime) {
-        const speed = deltaTime * 0.15; // Increased enemy movement speed for smoother motion
+        const speed = deltaTime * 0.25; // Much faster enemy movement for live performance
         this.enemies.forEach(enemy => {
             enemy.y += enemy.speed * speed;
             
@@ -407,7 +438,7 @@ class GameEngine {
     }
 
     updateObstacles(deltaTime) {
-        const speed = deltaTime * 0.15; // Increased obstacle speed for smoother motion
+        const speed = deltaTime * 0.25; // Much faster obstacle speed for live performance
         this.obstacles.forEach(obstacle => {
             obstacle.y += obstacle.speed * speed;
             obstacle.rotation += obstacle.rotationSpeed * deltaTime * 0.1;
@@ -417,7 +448,7 @@ class GameEngine {
     }
 
     updatePowerups(deltaTime) {
-        const speed = deltaTime * 0.15; // Increased powerup speed to match enemies
+        const speed = deltaTime * 0.25; // Much faster powerup speed for live performance
         this.powerups.forEach(powerup => {
             powerup.y += powerup.speed * speed;
             powerup.rotation += 0.05 * deltaTime * 0.1;

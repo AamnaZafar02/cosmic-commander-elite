@@ -1074,16 +1074,25 @@ body::before {
         padding: 0;
         margin: 0;
         overflow-x: hidden;
+        padding-top: 100px; /* Space for fixed header */
     }
     
     .game-header {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 999;
         flex-direction: row;
         flex-wrap: wrap;
-        padding: 10px 15px;
-        gap: 10px;
+        padding: 8px 15px;
+        gap: 8px;
         height: auto;
-        background: rgba(18, 20, 41, 0.95);
-        backdrop-filter: blur(15px);
+        min-height: 90px;
+        background: rgba(18, 20, 41, 0.98) !important;
+        backdrop-filter: blur(20px);
+        border-bottom: 2px solid rgba(0, 212, 255, 0.4);
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
     }
     
     .header-left {
@@ -1523,7 +1532,7 @@ body::before {
     }
 }
 
-/* Mobile responsive design */
+/* Mobile responsive design - 2 Button System */
 @media (max-width: 768px) {
     .mobile-controls {
         display: flex !important;
@@ -1531,64 +1540,68 @@ body::before {
         bottom: 0;
         left: 0;
         right: 0;
-        justify-content: space-between;
+        justify-content: space-around;
         align-items: center;
-        padding: 20px 25px 25px 25px;
-        background: rgba(8, 4, 21, 0.95);
-        border-top: 2px solid rgba(0, 212, 255, 0.5);
-        backdrop-filter: blur(15px);
+        padding: 25px 30px 30px 30px;
+        background: rgba(8, 4, 21, 0.98);
+        border-top: 3px solid rgba(0, 212, 255, 0.6);
+        backdrop-filter: blur(20px);
         z-index: 1000;
-        height: 80px;
-        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+        height: 100px;
+        box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.6);
     }
     
     .direction-pad {
         flex: 1;
-        justify-content: flex-start;
-        gap: 15px;
+        display: flex;
+        justify-content: center;
     }
     
-    .mobile-only-row {
-        gap: 20px;
-        align-items: center;
-    }
-    
-    .control-button {
-        width: 60px !important;
-        height: 60px !important;
-        font-size: 16px !important;
-        border-radius: 12px !important;
-        background: rgba(0, 212, 255, 0.2) !important;
-        border: 2px solid rgba(0, 212, 255, 0.6) !important;
-        color: #00d4ff !important;
+    .touch-btn {
+        width: 120px !important;
+        height: 70px !important;
+        font-size: 14px !important;
         font-weight: bold;
+        border-radius: 15px !important;
         transition: all 0.2s ease;
-        box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        border: 3px solid rgba(0, 212, 255, 0.8);
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(0, 150, 255, 0.4));
+        color: #ffffff;
+        box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
     }
     
-    .control-button:active {
-        transform: scale(0.95) !important;
-        background: rgba(0, 212, 255, 0.4) !important;
-        box-shadow: 0 2px 10px rgba(0, 212, 255, 0.5) !important;
+    .move-btn {
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(138, 43, 226, 0.3)) !important;
+        border-color: rgba(0, 212, 255, 0.8) !important;
+    }
+    
+    .fire-btn {
+        background: linear-gradient(135deg, rgba(255, 136, 0, 0.3), rgba(255, 68, 0, 0.4)) !important;
+        border-color: rgba(255, 136, 0, 0.8) !important;
+        color: #ffaa00 !important;
+        box-shadow: 0 6px 20px rgba(255, 136, 0, 0.4);
+    }
+    
+    .touch-btn:active {
+        transform: scale(0.92) !important;
+        box-shadow: 0 3px 15px rgba(0, 212, 255, 0.6) !important;
+    }
+    
+    .fire-btn:active {
+        box-shadow: 0 3px 15px rgba(255, 136, 0, 0.6) !important;
     }
     
     .action-buttons {
         flex: 1;
         display: flex;
-        justify-content: flex-end;
+        justify-content: center;
     }
-    
-    .action-buttons .control-button {
-        background: rgba(255, 136, 0, 0.2) !important;
-        border-color: rgba(255, 136, 0, 0.6) !important;
-        color: #ff8800 !important;
-        box-shadow: 0 4px 15px rgba(255, 136, 0, 0.3);
-    }
-    
-    .action-buttons .control-button:active {
-        background: rgba(255, 136, 0, 0.4) !important;
-        box-shadow: 0 2px 10px rgba(255, 136, 0, 0.5) !important;
-    }
+}
     
     .touch-btn {
         width: 65px;
