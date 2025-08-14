@@ -16,16 +16,17 @@
         overflow: hidden !important;
     }
     
-    /* Game area takes full width and proper height */
+    /* Game area takes proper space without being hidden */
     .game-area {
         width: 100% !important;
         flex: 1 !important;
         padding: 10px !important;
         margin: 0 !important;
-        margin-bottom: 120px !important; /* Space for controls */
+        margin-bottom: 220px !important; /* More space for controls + START button */
         display: flex !important;
         flex-direction: column !important;
         overflow: hidden !important;
+        min-height: calc(100vh - 75px - 220px) !important; /* Full height minus header and bottom space */
     }
     
     /* Mission info smaller on mobile */
@@ -43,15 +44,16 @@
         margin: 0 !important;
     }
     
-    /* Canvas responsive sizing */
+    /* Canvas responsive sizing - better visibility */
     #gameCanvas {
         width: 100% !important;
         height: auto !important;
-        max-height: 60vh !important;
-        min-height: 250px !important;
+        max-height: 70vh !important; /* Increased height */
+        min-height: 300px !important; /* Increased minimum height */
         border: 3px solid rgba(0, 212, 255, 0.8) !important;
         background: rgba(8, 4, 21, 0.95) !important;
         box-shadow: 0 0 20px rgba(0, 212, 255, 0.5) !important;
+        flex: 1 !important; /* Take available space */
     }
     
     /* Mobile controls - FORCED DISPLAY */
@@ -134,10 +136,10 @@
         box-shadow: 0 0 30px rgba(255, 68, 68, 1) !important;
     }
     
-    /* Game controls for start/pause buttons - better positioning */
+    /* Game controls for start/pause buttons - positioned between game and mobile controls */
     .game-controls {
         position: fixed !important;
-        bottom: 130px !important; /* Above mobile controls */
+        bottom: 160px !important; /* Above mobile controls with more space */
         left: 50% !important;
         transform: translateX(-50%) !important;
         z-index: 9998 !important;
