@@ -518,12 +518,12 @@ class GameEngine {
             const sectionWidth = this.width / 5;
             const xPosition = (section * sectionWidth) + (Math.random() * (sectionWidth - 40));
             
-            if (enemyType < 0.5) {
-                // Small Alien (50% chance) - Small and fast
+            if (enemyType < 0.7) {
+                // Small Alien (70% chance) - Small and fast
                 enemy = {
                     x: xPosition,
                     y: -30,
-                    width: 25, // Much smaller size
+                    width: 25, // Small size
                     height: 20,
                     speed: 2 + Math.random() * 1, // 2-3 speed
                     health: 1,
@@ -531,46 +531,33 @@ class GameEngine {
                     shootTimer: 2000 + Math.random() * 2000,
                     color: '#ff4444'
                 };
-            } else if (enemyType < 0.75) {
-                // Spawn Enemy (25% chance) - Medium size, FASTER speed
+            } else if (enemyType < 0.9) {
+                // Fast Small Alien (20% chance) - Same size, faster
                 enemy = {
                     x: xPosition,
-                    y: -35,
-                    width: 30, // Smaller size
-                    height: 25,
-                    speed: 3 + Math.random() * 1.5, // 3-4.5 speed (MUCH FASTER)
+                    y: -30,
+                    width: 25, // Same small size
+                    height: 20,
+                    speed: 3 + Math.random() * 1.5, // 3-4.5 speed (faster)
                     health: 1,
-                    type: 'spawn_enemy',
-                    shootTimer: 2000 + Math.random() * 1500, // Faster shooting
+                    type: 'alien_fast',
+                    shootTimer: 1800 + Math.random() * 1500, // Faster shooting
                     color: '#ff6666'
                 };
-            } else if (enemyType < 0.9) {
-                // Obstacle Enemy (15% chance) - Like moving obstacles
+            } else {
+                // Obstacle Enemy (10% chance) - Moving obstacles
                 enemy = {
                     x: xPosition,
                     y: -40,
-                    width: 35, // Small-medium size
-                    height: 30,
-                    speed: 1 + Math.random() * 1, // 1-2 speed
-                    health: 2,
+                    width: 30, // Small size
+                    height: 25,
+                    speed: 1.5 + Math.random() * 1, // 1.5-2.5 speed
+                    health: 1, // Reduced health
                     type: 'obstacle_enemy',
                     shootTimer: 3000 + Math.random() * 2000,
                     color: '#ff8888',
                     rotation: 0,
                     rotationSpeed: 0.02
-                };
-            } else {
-                // Advanced Alien (10% chance) - Slightly bigger but still small
-                enemy = {
-                    x: xPosition,
-                    y: -45,
-                    width: 40, // Still small
-                    height: 35,
-                    speed: 0.8 + Math.random() * 0.7, // 0.8-1.5 speed
-                    health: 2,
-                    type: 'alien_advanced',
-                    shootTimer: 3500 + Math.random() * 2000,
-                    color: '#ffaa44'
                 };
             }
             
@@ -839,10 +826,13 @@ class GameEngine {
             'large'
         );
 
+        // Force update lives in gameManager
         if (window.gameManager) {
+            console.log('Player damaged! Health:', this.player.health);
             window.gameManager.updateLives(this.player.health);
             
             if (this.player.health <= 0) {
+                console.log('Game Over - No health left');
                 window.gameManager.gameOver();
             }
         }
@@ -1177,13 +1167,13 @@ class GameEngine {
                 this.ctx.strokeText('👽', 0, 0); // Add white outline for contrast
                 this.ctx.fillText('👽', 0, 0);
                 
-            } else if (enemy.type === 'spawn_enemy') {
-                // Spawn enemy emoji - clear spawn creature with better visibility
+            } else if (enemy.type === 'alien_fast') {
+                // Fast alien emoji - same as small alien but different color effect
                 this.ctx.font = `bold ${enemy.width + 10}px Arial`; // Larger font
                 this.ctx.strokeStyle = '#ffffff';
                 this.ctx.lineWidth = 1;
-                this.ctx.strokeText('👾', 0, 0); // Add white outline for contrast
-                this.ctx.fillText('👾', 0, 0); // Space invader emoji (more visible than 🦠)
+                this.ctx.strokeText('�', 0, 0); // Add white outline for contrast
+                this.ctx.fillText('�', 0, 0);
                 
             } else if (enemy.type === 'obstacle_enemy') {
                 // Obstacle enemy - asteroid emoji with outline
@@ -1192,14 +1182,6 @@ class GameEngine {
                 this.ctx.lineWidth = 1;
                 this.ctx.strokeText('☄️', 0, 0);
                 this.ctx.fillText('☄️', 0, 0); // Comet/asteroid emoji
-                
-            } else if (enemy.type === 'alien_advanced') {
-                // Advanced alien emoji - different alien type with outline
-                this.ctx.font = `bold ${enemy.width + 12}px Arial`; // Larger font
-                this.ctx.strokeStyle = '#ffffff';
-                this.ctx.lineWidth = 1;
-                this.ctx.strokeText('👾', 0, 0);
-                this.ctx.fillText('👾', 0, 0); // Space invader emoji
             }
             
             this.ctx.restore();

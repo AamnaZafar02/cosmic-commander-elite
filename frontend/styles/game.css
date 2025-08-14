@@ -21,6 +21,7 @@
 body {
     margin: 0;
     padding: 0;
+    padding-top: 80px; /* Space for fixed header */
     font-family: 'Exo 2', sans-serif;
     background: radial-gradient(ellipse at center, #1a1a2e 0%, #16213e 25%, #0f0f23 50%, #080415 100%);
     background-attachment: fixed;
@@ -117,8 +118,13 @@ body::before {
     border-image: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.5), transparent) 1;
     height: 80px;
     box-shadow: 0 2px 20px rgba(0, 212, 255, 0.2);
-    position: relative;
+    position: fixed; /* Fixed position to prevent scrolling movement */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; /* High z-index to stay on top */
 }
+
 
 /* Enhanced header glow effect */
 .game-header::before {
@@ -1096,6 +1102,9 @@ body::before {
         margin: 0;
         overflow-x: hidden;
         padding-top: 60px; /* Reduced space for smaller header */
+        position: fixed; /* Prevent mobile scrolling issues */
+        width: 100%;
+        height: 100vh;
     }
     
     .game-header {
@@ -1114,6 +1123,8 @@ body::before {
         backdrop-filter: blur(20px);
         border-bottom: 1px solid rgba(0, 212, 255, 0.4);
         box-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+        transform: translateZ(0); /* Force hardware acceleration */
+        -webkit-transform: translateZ(0);
     }
     
     .header-left {

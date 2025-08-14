@@ -98,10 +98,10 @@ class GameManager {
         document.getElementById('startBtn').style.display = 'none';
         document.getElementById('pauseBtn').style.display = 'block';
         
-        // Hide game controls container during gameplay
+        // Keep game controls visible but show only pause button
         const gameControls = document.querySelector('.game-controls');
         if (gameControls) {
-            gameControls.style.display = 'none';
+            gameControls.style.display = 'flex'; // Keep visible for pause button
         }
         
         // Start game timer
