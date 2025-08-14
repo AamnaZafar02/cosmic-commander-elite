@@ -1186,22 +1186,21 @@ class GameEngine {
             
             if (enemy.type === 'alien_small') {
                 // Small alien with proper emoji ðŸ‘¾
-                this.ctx.font = `bold ${enemy.width + 8}px Arial`;
+                this.ctx.font = `bold ${enemy.width + 8}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", Arial, sans-serif`;
                 this.ctx.fillStyle = '#00ff00'; // Green glow effect
                 this.ctx.strokeStyle = '#ffffff';
                 this.ctx.lineWidth = 2;
-                this.ctx.strokeText('ðŸ‘¾', 0, 0);
-                this.ctx.fillText('ðŸ‘¾', 0, 0);
-                this.ctx.fill();
+                const alienEmoji = String.fromCodePoint(0x1F47E); this.ctx.strokeText(alienEmoji, 0, 0);
+                this.ctx.fillText(alienEmoji, 0, 0);
                 
             } else if (enemy.type === 'alien_fast') {
                 // Fast alien with proper emoji ðŸ‘¾ - red glow for speed
-                this.ctx.font = `bold ${enemy.width + 10}px Arial`;
+                this.ctx.font = `bold ${enemy.width + 10}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", Arial, sans-serif`;
                 this.ctx.fillStyle = '#ff4444';
                 this.ctx.strokeStyle = '#ffffff';
                 this.ctx.lineWidth = 2;
-                this.ctx.strokeText('ðŸ‘¾', 0, 0);
-                this.ctx.fillText('ðŸ‘¾', 0, 0);
+                const alienEmoji = String.fromCodePoint(0x1F47E); this.ctx.strokeText(alienEmoji, 0, 0);
+                this.ctx.fillText(alienEmoji, 0, 0);
                 
                 
             } else if (enemy.type === 'obstacle_enemy') {
@@ -1403,4 +1402,6 @@ class GameEngine {
         });
     }
 }
+
+
 
