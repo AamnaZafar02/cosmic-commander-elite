@@ -1097,14 +1097,13 @@ body::before {
 
 /* Mobile Responsiveness - Enhanced */
 @media (max-width: 768px) {
-    body {
+    html, body {
         padding: 0;
         margin: 0;
         overflow-x: hidden;
-        padding-top: 60px; /* Reduced space for smaller header */
-        position: fixed; /* Prevent mobile scrolling issues */
-        width: 100%;
         height: 100vh;
+        width: 100vw;
+        position: fixed; /* Prevent all scrolling */
     }
     
     .game-header {
@@ -1112,19 +1111,58 @@ body::before {
         top: 0;
         left: 0;
         right: 0;
-        z-index: 999;
+        z-index: 999 !important;
         flex-direction: row;
-        flex-wrap: nowrap; /* Single row layout */
-        padding: 5px 10px;
-        gap: 5px;
-        height: 55px; /* Fixed compact height */
-        min-height: auto;
+        flex-wrap: nowrap;
+        padding: 3px 8px;
+        gap: 3px;
+        height: 50px !important; /* Very compact height */
+        min-height: 50px !important;
         background: rgba(18, 20, 41, 0.98) !important;
         backdrop-filter: blur(20px);
         border-bottom: 1px solid rgba(0, 212, 255, 0.4);
         box-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
-        transform: translateZ(0); /* Force hardware acceleration */
+        transform: translateZ(0);
         -webkit-transform: translateZ(0);
+    }
+    
+    .game-container {
+        margin-top: 50px !important; /* Space for fixed header */
+        height: calc(100vh - 50px) !important;
+        overflow: hidden !important;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+    
+    .game-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 5px !important;
+        margin: 0 !important;
+        background-color: rgba(8, 4, 21, 0.8);
+        border: 2px solid rgba(0, 150, 255, 0.4);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    #gameCanvas {
+        width: 95% !important;
+        max-width: 350px !important;
+        height: auto !important;
+        aspect-ratio: 4/3 !important;
+        border-radius: 8px;
+        border: 2px solid rgba(0, 212, 255, 0.4);
+        background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+    }
+    
+    .game-sidebar {
+        display: none !important; /* Hide sidebars on mobile */
     }
     
     .header-left {
