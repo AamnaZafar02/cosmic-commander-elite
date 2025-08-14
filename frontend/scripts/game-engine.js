@@ -249,13 +249,16 @@ class GameEngine {
         this.deltaTime = currentTime - this.lastTime;
         this.lastTime = currentTime;
         
-        // Simplified deltaTime for better live performance
-        if (this.deltaTime > 50) this.deltaTime = 16; // Cap at reasonable time
-        if (this.deltaTime < 5) this.deltaTime = 16; // Consistent frame time
+        // Better deltaTime handling for smooth live performance
+        if (this.deltaTime > 33) this.deltaTime = 16; // Cap at 60fps equivalent
+        if (this.deltaTime < 8) this.deltaTime = 16; // Minimum consistent time
+        
+        // Use fixed timestep for smoother movement
+        const fixedDeltaTime = 16; // Fixed 60fps timestep
 
         if (!this.isPaused) {
-            // Simplified update for better performance
-            this.update(this.deltaTime * 1.2); // Slightly faster multiplier
+            // Use fixed timestep for consistent movement
+            this.update(fixedDeltaTime);
         }
         
         // Enable smoothing for better visuals

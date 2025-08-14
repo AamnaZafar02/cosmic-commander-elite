@@ -98,6 +98,12 @@ class GameManager {
         document.getElementById('startBtn').style.display = 'none';
         document.getElementById('pauseBtn').style.display = 'block';
         
+        // Hide game controls container during gameplay
+        const gameControls = document.querySelector('.game-controls');
+        if (gameControls) {
+            gameControls.style.display = 'none';
+        }
+        
         // Start game timer
         this.gameTimer = setInterval(() => {
             if (!this.engine.isPaused && this.engine.isRunning) {
@@ -203,6 +209,12 @@ class GameManager {
         // Update UI
         document.getElementById('startBtn').style.display = 'block';
         document.getElementById('pauseBtn').style.display = 'none';
+        
+        // Show game controls container when game is over
+        const gameControls = document.querySelector('.game-controls');
+        if (gameControls) {
+            gameControls.style.display = 'flex';
+        }
         
         // Reload leaderboard
         setTimeout(() => {

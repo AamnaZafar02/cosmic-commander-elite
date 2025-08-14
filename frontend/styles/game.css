@@ -1627,30 +1627,30 @@ body::before {
         max-height: calc(100vh - 220px);
     }
     
-    /* Show game controls on mobile but positioned above mobile controls */
+    /* Show game controls on mobile only when game is not running */
     .game-controls {
-        display: flex !important;
         position: fixed;
-        top: 50%;
+        bottom: 150px;
         left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 999;
-        background: rgba(0, 0, 30, 0.9);
+        transform: translateX(-50%);
+        z-index: 998;
+        background: rgba(0, 0, 30, 0.95);
         padding: 20px;
         border-radius: 15px;
         border: 2px solid rgba(0, 212, 255, 0.6);
         backdrop-filter: blur(10px);
+        display: none; /* Hidden by default */
+    }
+    
+    /* Only show when game is not running */
+    .game-controls.show {
+        display: flex !important;
     }
     
     .control-btn {
         font-size: 1.1rem !important;
         padding: 12px 20px !important;
         min-width: 150px;
-    }
-    
-    /* Ensure start button is always visible when game is not running */
-    .game-controls:not([style*="display: none"]) {
-        display: flex !important;
     }
     
     /* Mobile header adjustments */
