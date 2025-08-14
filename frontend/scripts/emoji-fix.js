@@ -1,6 +1,6 @@
-// Enhanced Emoji Fix for Game Engine v1.0.4
+// Enhanced Emoji Fix for Game Engine v1.0.6
 // This file contains the corrected emoji rendering with multiple fallback methods
-// UPDATED: More robust emoji rendering with enhanced visibility and mobile compatibility
+// UPDATED: Fixed syntax errors, improved emoji rendering for all enemy types
 
 function renderEnemiesFixed(ctx, enemies) {
     enemies.forEach(enemy => {
@@ -58,9 +58,8 @@ function renderEnemiesFixed(ctx, enemies) {
             // Glow effect for aliens
             ctx.shadowColor = '#33ff33';
             ctx.shadowBlur = 10;
-        }
-            
-        } else if (enemy.type === 'alien_fast') {
+        } 
+        else if (enemy.type === 'alien_fast') {
             // Fast alien - similar approach with different color
             ctx.font = `bold ${enemy.width + 12}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "EmojiOne Color", Arial, sans-serif`;
             ctx.fillStyle = '#ff4444';
@@ -86,7 +85,11 @@ function renderEnemiesFixed(ctx, enemies) {
             ctx.ellipse(5, -5, 3, 5, -Math.PI/4, 0, Math.PI * 2);
             ctx.fill();
             
-        } else if (enemy.type === 'obstacle_enemy') {
+            // Glow effect for fast aliens
+            ctx.shadowColor = '#ff4444';
+            ctx.shadowBlur = 10;
+        } 
+        else if (enemy.type === 'obstacle_enemy') {
             // Obstacle enemy - comet/asteroid
             ctx.font = `bold ${enemy.width + 10}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "EmojiOne Color", Arial, sans-serif`;
             ctx.fillStyle = '#ffaa00';
@@ -111,6 +114,10 @@ function renderEnemiesFixed(ctx, enemies) {
             ctx.beginPath();
             ctx.arc(4, 3, 2, 0, Math.PI * 2);
             ctx.fill();
+            
+            // Glow effect for obstacles
+            ctx.shadowColor = '#ffaa00';
+            ctx.shadowBlur = 10;
         }
         
         ctx.restore();
