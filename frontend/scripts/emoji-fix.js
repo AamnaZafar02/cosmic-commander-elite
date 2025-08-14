@@ -1,6 +1,6 @@
-// Enhanced Emoji Fix for Game Engine v1.0.3
+// Enhanced Emoji Fix for Game Engine v1.0.4
 // This file contains the corrected emoji rendering with multiple fallback methods
-// UPDATED: More robust emoji rendering with enhanced visibility
+// UPDATED: More robust emoji rendering with enhanced visibility and mobile compatibility
 
 function renderEnemiesFixed(ctx, enemies) {
     enemies.forEach(enemy => {
@@ -21,9 +21,9 @@ function renderEnemiesFixed(ctx, enemies) {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         
-        // Try multiple methods to render emojis properly
+        // Try multiple methods to render emojis properly with better fallbacks
         if (enemy.type === 'alien_small') {
-            // Method 1: Using Unicode alien directly with multiple font fallbacks
+            // Method 1: Using Unicode alien with multiple font fallbacks
             ctx.font = `bold ${enemy.width + 12}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "EmojiOne Color", Arial, sans-serif`;
             ctx.fillStyle = '#33ff33';
             ctx.strokeStyle = '#ffffff';
@@ -33,8 +33,8 @@ function renderEnemiesFixed(ctx, enemies) {
             ctx.strokeText('👽', 0, 0);
             ctx.fillText('👽', 0, 0);
             
-            // Method 2: Fallback to a custom drawn alien if emoji doesn't render
-            // Draw a simple alien shape as backup
+            // Method 2: Always draw a simple alien shape regardless of emoji support
+            // Draw a simple alien shape
             ctx.beginPath();
             ctx.fillStyle = '#33ff33';
             ctx.ellipse(0, -5, enemy.width/3, enemy.width/4, 0, 0, Math.PI * 2);
@@ -48,6 +48,17 @@ function renderEnemiesFixed(ctx, enemies) {
             ctx.beginPath();
             ctx.ellipse(5, -5, 3, 5, -Math.PI/4, 0, Math.PI * 2);
             ctx.fill();
+            
+            // Small mouth
+            ctx.beginPath();
+            ctx.fillStyle = '#000000';
+            ctx.ellipse(0, 3, 3, 1, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Glow effect for aliens
+            ctx.shadowColor = '#33ff33';
+            ctx.shadowBlur = 10;
+        }
             
         } else if (enemy.type === 'alien_fast') {
             // Fast alien - similar approach with different color

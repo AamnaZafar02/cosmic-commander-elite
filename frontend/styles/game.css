@@ -1363,17 +1363,32 @@ body::before {
 /* Small mobile devices */
 @media (max-width: 480px) {
     .game-header {
-        padding: 8px;
-        height: auto;
+        padding: 6px;
+        height: 60px; /* Reduced height for mobile */
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 9999;
+    }
+    
+    .header-center {
+        display: none; /* Hide center content on small screens */
     }
     
     .logo span {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
+    }
+    
+    .user-info {
+        display: none; /* Hide user info on small screens */
     }
     
     .game-container {
         padding: 8px;
         gap: 10px;
+        margin-top: 60px; /* Match header height */
     }
     
     .game-area {
@@ -1503,51 +1518,71 @@ body::before {
 /* Enhanced cosmic styling for touch buttons */
 .touch-btn {
     pointer-events: auto;
-    width: 80px;
+    width: 100px;
     height: 80px;
     border-radius: 15px;
     background: 
         linear-gradient(135deg, 
-            rgba(0, 212, 255, 0.3) 0%, 
-            rgba(138, 43, 226, 0.25) 50%, 
-            rgba(0, 100, 200, 0.3) 100%);
-    border: 3px solid rgba(0, 212, 255, 0.8);
+            rgba(0, 212, 255, 0.4) 0%, 
+            rgba(138, 43, 226, 0.35) 50%, 
+            rgba(0, 100, 200, 0.4) 100%);
+    border: 3px solid rgba(0, 212, 255, 0.9);
     color: #fff;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     font-size: 1.6rem;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
     user-select: none;
     touch-action: manipulation;
     box-shadow: 
-        0 4px 15px rgba(0, 212, 255, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2),
-        0 0 25px rgba(0, 150, 255, 0.5);
+        0 4px 15px rgba(0, 212, 255, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 0 25px rgba(0, 150, 255, 0.6);
     position: relative;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
     font-family: 'Orbitron', monospace;
 }
 
 .touch-btn i {
-    font-size: 1.4rem;
-    margin-bottom: 4px;
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
 }
 
 /* Fire button special styling */
 .fire-btn {
-    width: 120px;
+    width: 130px;
     height: 80px;
     background: 
         linear-gradient(135deg, 
-            rgba(255, 68, 68, 0.4) 0%, 
-            rgba(255, 136, 0, 0.35) 50%, 
-            rgba(255, 0, 0, 0.4) 100%);
-    border: 3px solid rgba(255, 68, 68, 0.9);
+            rgba(255, 68, 68, 0.5) 0%, 
+            rgba(255, 136, 0, 0.45) 50%, 
+            rgba(255, 0, 0, 0.5) 100%);
+    border: 3px solid rgba(255, 68, 68, 1);
     box-shadow: 
+        0 4px 15px rgba(255, 68, 68, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 0 25px rgba(255, 0, 0, 0.7);
+    color: white;
+    font-weight: 800;
+}
+
+.fire-btn i {
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+}
+
+/* Active/pressed state for mobile buttons */
+.touch-btn:active, 
+.touch-btn.active {
+    transform: scale(0.95) translateY(4px);
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
+    border-color: rgba(0, 255, 255, 1);
+}
         0 4px 15px rgba(255, 68, 68, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.2),
         0 0 25px rgba(255, 68, 68, 0.5);
@@ -1689,13 +1724,33 @@ body::before {
         right: 0;
         justify-content: space-around;
         align-items: center;
-        padding: 15px 20px 20px 20px;
+        padding: 10px 15px 15px 15px;
         background: rgba(8, 4, 21, 0.98);
-        border-top: 2px solid rgba(0, 212, 255, 0.6);
+        border-top: 2px solid rgba(0, 212, 255, 0.8);
         backdrop-filter: blur(20px);
         z-index: 1000;
-        height: 80px; /* Reduced height */
-        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.6);
+        height: 100px; /* Increased height for better visibility */
+        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.8);
+    }
+    
+    /* Force left sidebar to be hidden on mobile */
+    .game-sidebar.left {
+        display: none !important;
+    }
+    
+    /* Make game area take full width */
+    .game-area {
+        width: 100% !important;
+        padding: 0 !important;
+        margin-bottom: 120px !important; /* Extra space for controls */
+    }
+    
+    /* Make canvas responsive */
+    #gameCanvas {
+        width: 100% !important;
+        height: auto !important;
+        max-height: 70vh !important;
+        min-height: 300px !important;
     }
     
     .direction-pad {

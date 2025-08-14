@@ -1,0 +1,97 @@
+/* Mobile-specific CSS overrides */
+@media (max-width: 768px) {
+    .mobile-controls {
+        display: flex !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        justify-content: space-around;
+        align-items: center;
+        padding: 10px 15px 15px 15px;
+        background: rgba(8, 4, 21, 0.98);
+        border-top: 3px solid rgba(0, 212, 255, 0.8);
+        backdrop-filter: blur(20px);
+        z-index: 1000;
+        height: 100px; /* Increased height for better visibility */
+        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.8);
+    }
+    
+    /* Hide sidebar on mobile */
+    .game-sidebar {
+        display: none !important;
+    }
+    
+    /* Make game area take full width */
+    .game-area {
+        width: 100% !important;
+        padding: 10px !important;
+        margin-bottom: 120px !important; /* Extra space for controls */
+    }
+    
+    /* Make canvas responsive */
+    #gameCanvas {
+        width: 100% !important;
+        height: auto !important;
+        max-height: 70vh !important;
+        min-height: 300px !important;
+        border: 3px solid rgba(0, 212, 255, 0.8) !important;
+    }
+    
+    /* Enhanced touch buttons for mobile */
+    .touch-btn {
+        width: 100px !important;
+        height: 80px !important; 
+        font-size: 1.5rem !important;
+        border: 3px solid rgba(0, 212, 255, 1) !important;
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.8) !important;
+    }
+    
+    .touch-btn i {
+        font-size: 1.8rem !important;
+    }
+    
+    .fire-btn {
+        width: 130px !important;
+        height: 80px !important;
+        border: 3px solid rgba(255, 68, 68, 1) !important;
+        box-shadow: 0 0 20px rgba(255, 68, 68, 0.8) !important;
+    }
+    
+    /* Reduce header height for mobile */
+    .game-header {
+        padding: 6px;
+        height: 60px; /* Reduced height for mobile */
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 9999;
+    }
+    
+    .header-center {
+        display: none; /* Hide center content on small screens */
+    }
+    
+    .logo span {
+        font-size: 0.75rem;
+    }
+    
+    .user-info {
+        display: none; /* Hide user info on small screens */
+    }
+    
+    /* Fix emoji rendering */
+    .emoji-fix-style {
+        font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif !important;
+        font-size: 24px !important;
+    }
+}
+
+/* Touch device specific styles */
+@media (hover: none) and (pointer: coarse) {
+    .mobile-controls {
+        display: flex !important;
+    }
+}
