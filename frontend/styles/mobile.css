@@ -134,6 +134,55 @@
         box-shadow: 0 0 30px rgba(255, 68, 68, 1) !important;
     }
     
+    /* Game controls for start/pause buttons */
+    .game-controls {
+        position: fixed !important;
+        bottom: 120px !important; /* Above mobile controls */
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        z-index: 9998 !important;
+        display: flex !important;
+        gap: 15px !important;
+        padding: 10px !important;
+        background: rgba(0, 15, 35, 0.9) !important;
+        border-radius: 15px !important;
+        border: 2px solid rgba(0, 212, 255, 0.6) !important;
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.4) !important;
+    }
+    
+    .control-btn {
+        padding: 15px 25px !important;
+        font-size: 1.1rem !important;
+        font-weight: bold !important;
+        color: white !important;
+        background: linear-gradient(135deg, 
+            rgba(0, 212, 255, 0.7) 0%, 
+            rgba(0, 140, 186, 0.8) 100%) !important;
+        border: 2px solid rgba(0, 212, 255, 1) !important;
+        border-radius: 10px !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8) !important;
+        box-shadow: 0 0 15px rgba(0, 212, 255, 0.5) !important;
+        min-width: 140px !important;
+        font-family: 'Orbitron', monospace !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+    }
+    
+    .control-btn:hover, .control-btn:active {
+        transform: scale(1.05) !important;
+        box-shadow: 0 0 25px rgba(0, 212, 255, 0.8) !important;
+        background: linear-gradient(135deg, 
+            rgba(0, 255, 255, 0.8) 0%, 
+            rgba(0, 170, 255, 0.9) 100%) !important;
+    }
+    
+    .control-btn i {
+        margin-right: 8px !important;
+        font-size: 1.2rem !important;
+    }
+    
     /* Reduce header height for mobile */
     .game-header {
         padding: 8px !important;

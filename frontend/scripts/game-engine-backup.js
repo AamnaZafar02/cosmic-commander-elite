@@ -1,4 +1,4 @@
-﻿// Game Engine - Core game mechanics and rendering
+// Game Engine - Core game mechanics and rendering
 // Updated: v4.0.1 - Fixed emoji rendering, optimized performance, perfect speed balance
 class GameEngine {
     constructor(canvas) {
@@ -1086,9 +1086,9 @@ class GameEngine {
         this.ctx.stroke();
         
         // Draw emoji multiple times for better visibility
-        this.ctx.fillText('ðŸš€', 0, -5);
+        this.ctx.fillText('🚀', 0, -5);
         this.ctx.shadowBlur = 10;
-        this.ctx.fillText('ðŸš€', 0, -5);
+        this.ctx.fillText('🚀', 0, -5);
 
         // Rocket nose cone with enhanced glow
         this.ctx.fillStyle = '#ffffff';
@@ -1139,7 +1139,7 @@ class GameEngine {
             this.ctx.textAlign = 'center';
             this.ctx.textBaseline = 'middle';
             this.ctx.fillStyle = '#ffffff';
-            this.ctx.fillText('âš¡', bullet.x + bullet.width/2, bullet.y + bullet.height/2);
+            this.ctx.fillText('⚡', bullet.x + bullet.width/2, bullet.y + bullet.height/2);
             
             // Add energy trail
             this.ctx.globalAlpha = 0.7;
@@ -1185,24 +1185,25 @@ class GameEngine {
             this.ctx.textBaseline = 'middle';
             
             if (enemy.type === 'alien_small') {
-                // Small alien with proper emoji ðŸ‘¾
+                // Small alien with proper emoji 👾
                 this.ctx.font = `bold ${enemy.width + 8}px Arial`;
                 this.ctx.fillStyle = '#00ff00'; // Green glow effect
                 this.ctx.strokeStyle = '#ffffff';
                 this.ctx.lineWidth = 2;
-                this.ctx.strokeText('ðŸ‘¾', 0, 0);
-                this.ctx.fillText('ðŸ‘¾', 0, 0);
+                this.ctx.strokeText('👾', 0, 0);
+                this.ctx.fillText('👾', 0, 0);
                 this.ctx.fill();
                 
             } else if (enemy.type === 'alien_fast') {
-                // Fast alien with proper emoji ðŸ‘¾ - red glow for speed
+                // Fast alien with proper emoji 👾 - red glow for speed
                 this.ctx.font = `bold ${enemy.width + 10}px Arial`;
                 this.ctx.fillStyle = '#ff4444';
                 this.ctx.strokeStyle = '#ffffff';
                 this.ctx.lineWidth = 2;
-                this.ctx.strokeText('ðŸ‘¾', 0, 0);
-                this.ctx.fillText('ðŸ‘¾', 0, 0);
-                
+                this.ctx.strokeText('👾', 0, 0);
+                this.ctx.fillText('👾', 0, 0);
+                this.ctx.strokeText('�', 0, 0); // Add white outline for contrast
+                this.ctx.fillText('�', 0, 0);
                 
             } else if (enemy.type === 'obstacle_enemy') {
                 // Obstacle enemy - custom drawn asteroid (NO EMOJIS)
@@ -1403,4 +1404,3 @@ class GameEngine {
         });
     }
 }
-
