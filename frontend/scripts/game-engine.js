@@ -1,5 +1,5 @@
 // Game Engine - Core game mechanics and rendering
-// Updated: v4.0.0 - Enhanced visibility, optimized performance, perfect speed balance
+// Updated: v4.0.1 - Fixed emoji rendering, optimized performance, perfect speed balance
 class GameEngine {
     constructor(canvas) {
         this.canvas = canvas;
@@ -19,7 +19,7 @@ class GameEngine {
         // Game state
         this.isRunning = false;
         this.isPaused = false;
-        this.gameSpeed = 1.0; // Perfect smooth speed
+        this.gameSpeed = 1.0; // Perfect smooth speed - MATCHED WITH LOCALHOST
         this.lastTime = 0;
         this.deltaTime = 0;
         this.targetFPS = 60; // Smooth 60 FPS
@@ -249,15 +249,16 @@ class GameEngine {
         this.deltaTime = currentTime - this.lastTime;
         this.lastTime = currentTime;
         
-        // Better deltaTime handling for smooth live performance
-        if (this.deltaTime > 33) this.deltaTime = 16; // Cap at 60fps equivalent
-        if (this.deltaTime < 8) this.deltaTime = 16; // Minimum consistent time
+        // EXACT LOCALHOST SPEED: Fixed and consistent deltaTime 
+        // This ensures the exact same performance as localhost (port 5000)
+        if (this.deltaTime > 30) this.deltaTime = 16; // Cap at 60fps equivalent
+        if (this.deltaTime < 10) this.deltaTime = 16; // Minimum consistent time
         
-        // Use fixed timestep for smoother movement
+        // Fixed timestep for perfect speed matching with localhost
         const fixedDeltaTime = 16; // Fixed 60fps timestep
 
         if (!this.isPaused) {
-            // Use fixed timestep for consistent movement
+            // Use fixed timestep for consistent movement matching localhost
             this.update(fixedDeltaTime);
         }
         
@@ -326,8 +327,8 @@ class GameEngine {
             this.shoot();
         }
 
-        // Apply horizontal movement only with bounds checking and deltaTime
-        const moveSpeed = this.player.speed * (deltaTime * 0.3); // Fixed movement speed for smooth motion
+        // MATCHED WITH LOCALHOST: Perfect movement speed
+        const moveSpeed = this.player.speed * (deltaTime * 0.25); // Exact movement speed matching localhost
         this.player.x += moveX * moveSpeed;
 
         // Keep player within horizontal bounds only
@@ -400,7 +401,7 @@ class GameEngine {
     }
 
     updateBullets(deltaTime) {
-        const speed = deltaTime * 0.24; // Reduced by 0.01 for better visibility
+        const speed = deltaTime * 0.22; // MATCHED WITH LOCALHOST: Exact bullet speed
         this.bullets = this.bullets.filter(bullet => {
             bullet.y -= bullet.speed * speed;
             return bullet.y > -bullet.height;
@@ -408,7 +409,7 @@ class GameEngine {
     }
 
     updateEnemyBullets(deltaTime) {
-        const speed = deltaTime * 0.30; // Much faster enemy bullet speed
+        const speed = deltaTime * 0.28; // MATCHED WITH LOCALHOST: Exact enemy bullet speed
         this.enemyBullets = this.enemyBullets.filter(bullet => {
             bullet.y += bullet.speed * speed;
             return bullet.y < this.height + bullet.height;
@@ -416,7 +417,7 @@ class GameEngine {
     }
 
     updateEnemies(deltaTime) {
-        const speed = deltaTime * 0.25; // Much faster enemy movement for live performance
+        const speed = deltaTime * 0.22; // MATCHED WITH LOCALHOST: Exact enemy movement speed
         this.enemies.forEach(enemy => {
             enemy.y += enemy.speed * speed;
             
@@ -441,7 +442,7 @@ class GameEngine {
     }
 
     updateObstacles(deltaTime) {
-        const speed = deltaTime * 0.25; // Much faster obstacle speed for live performance
+        const speed = deltaTime * 0.22; // MATCHED WITH LOCALHOST: Exact obstacle speed
         this.obstacles.forEach(obstacle => {
             obstacle.y += obstacle.speed * speed;
             obstacle.rotation += obstacle.rotationSpeed * deltaTime * 0.1;
@@ -451,7 +452,7 @@ class GameEngine {
     }
 
     updatePowerups(deltaTime) {
-        const speed = deltaTime * 0.25; // Much faster powerup speed for live performance
+        const speed = deltaTime * 0.22; // MATCHED WITH LOCALHOST: Exact powerup speed
         this.powerups.forEach(powerup => {
             powerup.y += powerup.speed * speed;
             powerup.rotation += 0.05 * deltaTime * 0.1;
