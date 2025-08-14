@@ -186,80 +186,97 @@
     
     /* Reduce header height for mobile and show properly */
     .game-header {
-        padding: 8px 15px !important;
-        height: 70px !important;
+        padding: 10px 15px !important;
+        height: 75px !important;
         position: fixed !important;
         top: 0 !important;
         left: 0 !important;
         right: 0 !important;
         width: 100% !important;
         z-index: 9999 !important;
-        background: rgba(0, 15, 35, 0.95) !important;
-        border-bottom: 2px solid rgba(0, 212, 255, 0.6) !important;
-        backdrop-filter: blur(10px) !important;
+        background: rgba(0, 15, 35, 0.98) !important;
+        border-bottom: 2px solid rgba(0, 212, 255, 0.8) !important;
+        backdrop-filter: blur(15px) !important;
         display: flex !important;
         align-items: center !important;
         justify-content: space-between !important;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.8) !important;
     }
     
-    /* Show header properly on mobile */
+    /* Force show header elements on mobile */
     .header-left {
-        flex: 0 0 auto !important;
+        flex: 1 !important;
         display: flex !important;
+        align-items: center !important;
     }
     
     .header-right {
         flex: 0 0 auto !important;
         display: flex !important;
+        align-items: center !important;
     }
     
     .header-center {
         display: none !important;
     }
     
-    /* Logo adjustment for mobile */
+    /* Logo properly visible on mobile */
     .logo {
         display: flex !important;
         align-items: center !important;
-        gap: 8px !important;
+        gap: 10px !important;
+        text-decoration: none !important;
     }
     
     .logo span {
-        font-size: 0.9rem !important;
+        font-size: 1rem !important;
         font-weight: bold !important;
         color: #00d4ff !important;
+        text-shadow: 0 0 10px rgba(0, 212, 255, 0.8) !important;
+        display: block !important;
     }
     
     .logo i {
-        font-size: 1.2rem !important;
+        font-size: 1.4rem !important;
         color: #00d4ff !important;
+        text-shadow: 0 0 10px rgba(0, 212, 255, 0.8) !important;
     }
     
-    /* User info properly visible */
+    /* User info properly visible on mobile */
     .user-info {
         display: flex !important;
         align-items: center !important;
-        gap: 10px !important;
+        gap: 12px !important;
     }
     
     .user-info span {
         color: white !important;
-        font-size: 0.9rem !important;
+        font-size: 1rem !important;
         font-weight: bold !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8) !important;
+        display: block !important;
     }
     
     .login-prompt-btn, .logout-btn {
-        padding: 6px 12px !important;
-        font-size: 0.8rem !important;
-        border-radius: 6px !important;
-        border: 1px solid rgba(0, 212, 255, 0.8) !important;
-        background: rgba(0, 212, 255, 0.2) !important;
+        padding: 8px 15px !important;
+        font-size: 0.9rem !important;
+        border-radius: 8px !important;
+        border: 2px solid rgba(0, 212, 255, 0.8) !important;
+        background: rgba(0, 212, 255, 0.3) !important;
         color: white !important;
+        font-weight: bold !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8) !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .login-prompt-btn:hover, .logout-btn:hover {
+        background: rgba(0, 212, 255, 0.6) !important;
+        box-shadow: 0 0 15px rgba(0, 212, 255, 0.6) !important;
     }
     
     /* Adjust body padding for header */
     body {
-        padding-top: 70px !important;
+        padding-top: 75px !important;
     }
     
     .logo span {
@@ -293,7 +310,22 @@
     }
 }
 
-/* Very small screens */
+    /* Modal z-index fix for mobile - ensure modals appear over game controls */
+    .modal {
+        z-index: 10000 !important;
+    }
+    
+    .modal.show {
+        z-index: 10000 !important;
+    }
+    
+    /* Hide game controls when modal is open */
+    .modal.show ~ .game-controls,
+    body.modal-open .game-controls {
+        display: none !important;
+    }
+    
+    /* Very small screens */
 @media (max-width: 480px) {
     .game-header {
         padding: 6px 10px !important;
