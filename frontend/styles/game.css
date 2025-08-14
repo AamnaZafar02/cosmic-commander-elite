@@ -1074,7 +1074,7 @@ body::before {
         padding: 0;
         margin: 0;
         overflow-x: hidden;
-        padding-top: 100px; /* Space for fixed header */
+        padding-top: 60px; /* Reduced space for smaller header */
     }
     
     .game-header {
@@ -1084,41 +1084,86 @@ body::before {
         right: 0;
         z-index: 999;
         flex-direction: row;
-        flex-wrap: wrap;
-        padding: 8px 15px;
-        gap: 8px;
-        height: auto;
-        min-height: 90px;
+        flex-wrap: nowrap; /* Single row layout */
+        padding: 5px 10px;
+        gap: 5px;
+        height: 55px; /* Fixed compact height */
+        min-height: auto;
         background: rgba(18, 20, 41, 0.98) !important;
         backdrop-filter: blur(20px);
-        border-bottom: 2px solid rgba(0, 212, 255, 0.4);
-        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+        border-bottom: 1px solid rgba(0, 212, 255, 0.4);
+        box-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
     }
     
     .header-left {
-        width: 60%;
+        width: 40%;
         order: 1;
+        display: flex;
+        align-items: center;
+    }
+    
+    .header-left .logo {
+        font-size: 0.7rem;
+    }
+    
+    .header-left .logo i {
+        font-size: 1rem;
+        margin-right: 5px;
+    }
+    
+    .header-left .logo span {
+        font-size: 0.6rem;
+        display: inline-block;
     }
     
     .header-right {
-        width: 40%;
+        width: 35%;
         justify-content: flex-end;
         order: 2;
+        display: flex;
+        align-items: center;
     }
     
     .header-center {
-        width: 100%;
+        width: 25%;
         order: 3;
-        margin-top: 5px;
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+    
+    .daily-challenge {
+        font-size: 0.5rem;
+        padding: 2px 5px;
+        text-align: center;
+        background: rgba(0, 212, 255, 0.1);
+        border-radius: 5px;
+        border: 1px solid rgba(0, 212, 255, 0.3);
+    }
+    
+    .daily-challenge .challenge-title {
+        font-size: 0.4rem;
+        margin-bottom: 1px;
+    }
+    
+    .daily-challenge .challenge-desc {
+        font-size: 0.35rem;
+        line-height: 1;
+    }
+    
+    .challenge-progress {
+        font-size: 0.5rem;
+        color: #00d4ff;
+        font-weight: bold;
     }
 
     .game-container {
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        padding: 10px;
-        margin-bottom: 120px; /* Space for mobile controls */
-        min-height: calc(100vh - 200px);
+        gap: 5px;
+        padding: 5px;
+        margin-bottom: 110px; /* Space for mobile controls */
+        min-height: calc(100vh - 180px);
     }
     
     .game-area {
@@ -1129,21 +1174,41 @@ body::before {
     
     #gameCanvas {
         width: 100% !important;
-        height: 400px !important;
+        height: 350px !important; /* Reduced height for better mobile fit */
         max-width: 100%;
         border-radius: 8px;
         background-color: rgba(8, 4, 21, 0.95);
         border: 2px solid rgba(0, 212, 255, 0.5);
-        box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
     }
     
     .sidebar {
         width: 100%;
-        margin: 0;
-        padding: 15px;
+        margin: 5px 0;
+        padding: 10px;
         background: rgba(18, 20, 41, 0.95);
-        border-radius: 10px;
+        border-radius: 8px;
         border: 1px solid rgba(0, 212, 255, 0.3);
+        font-size: 0.8rem;
+    }
+    
+    .sidebar-section {
+        margin-bottom: 8px;
+    }
+    
+    .sidebar h3 {
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .stat-item {
+        padding: 8px;
+        font-size: 0.7rem;
     }
     
     .game-sidebar {
@@ -1542,13 +1607,13 @@ body::before {
         right: 0;
         justify-content: space-around;
         align-items: center;
-        padding: 25px 30px 30px 30px;
+        padding: 15px 20px 20px 20px;
         background: rgba(8, 4, 21, 0.98);
-        border-top: 3px solid rgba(0, 212, 255, 0.6);
+        border-top: 2px solid rgba(0, 212, 255, 0.6);
         backdrop-filter: blur(20px);
         z-index: 1000;
-        height: 100px;
-        box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.6);
+        height: 80px; /* Reduced height */
+        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.6);
     }
     
     .direction-pad {
@@ -1558,21 +1623,25 @@ body::before {
     }
     
     .touch-btn {
-        width: 120px !important;
-        height: 70px !important;
-        font-size: 14px !important;
+        width: 100px !important; /* Smaller buttons */
+        height: 50px !important; /* Smaller height */
+        font-size: 12px !important;
         font-weight: bold;
-        border-radius: 15px !important;
+        border-radius: 12px !important;
         transition: all 0.2s ease;
-        border: 3px solid rgba(0, 212, 255, 0.8);
+        border: 2px solid rgba(0, 212, 255, 0.8);
         background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(0, 150, 255, 0.4));
         color: #ffffff;
-        box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+        box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
         display: flex;
-        flex-direction: column;
+        flex-direction: row; /* Horizontal layout for icon and text */
         align-items: center;
         justify-content: center;
         gap: 5px;
+    }
+    
+    .touch-btn i {
+        font-size: 14px !important;
     }
     
     .move-btn {
@@ -1630,13 +1699,13 @@ body::before {
     /* Show game controls on mobile only when game is not running */
     .game-controls {
         position: fixed;
-        bottom: 150px;
+        bottom: 90px; /* Just above mobile controls */
         left: 50%;
         transform: translateX(-50%);
         z-index: 998;
         background: rgba(0, 0, 30, 0.95);
-        padding: 20px;
-        border-radius: 15px;
+        padding: 15px 20px;
+        border-radius: 12px;
         border: 2px solid rgba(0, 212, 255, 0.6);
         backdrop-filter: blur(10px);
         display: none; /* Hidden by default */
@@ -1648,9 +1717,10 @@ body::before {
     }
     
     .control-btn {
-        font-size: 1.1rem !important;
-        padding: 12px 20px !important;
-        min-width: 150px;
+        font-size: 1rem !important;
+        padding: 10px 18px !important;
+        min-width: 140px !important;
+        height: 45px !important;
     }
     
     /* Mobile header adjustments */
