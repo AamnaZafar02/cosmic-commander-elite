@@ -1602,7 +1602,9 @@ body::before {
         justify-content: center;
     }
 }
-    
+
+/* Additional mobile adjustments */
+@media (max-width: 480px) {
     .touch-btn {
         width: 65px;
         height: 65px;
