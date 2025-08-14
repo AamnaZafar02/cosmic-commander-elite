@@ -1132,14 +1132,17 @@ class GameEngine {
             this.ctx.shadowBlur = 12;
             this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
             
-            // Add bullet emoji (clear, no background)
+            // Add bullet emoji (proper fire/energy bolt)
             this.ctx.shadowBlur = 6;
             this.ctx.shadowColor = '#ffffff';
-            this.ctx.font = 'bold 18px Arial';
+            this.ctx.font = 'bold 18px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", Arial, sans-serif';
             this.ctx.textAlign = 'center';
             this.ctx.textBaseline = 'middle';
             this.ctx.fillStyle = '#ffffff';
-            this.ctx.fillText('âš¡', bullet.x + bullet.width/2, bullet.y + bullet.height/2);
+            
+            // Use Unicode for proper bolt emoji
+            const boltEmoji = String.fromCodePoint(0x26A1); // ⚡ lightning bolt
+            this.ctx.fillText(boltEmoji, bullet.x + bullet.width/2, bullet.y + bullet.height/2);
             
             // Add energy trail
             this.ctx.globalAlpha = 0.7;
